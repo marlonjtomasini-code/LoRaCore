@@ -1,0 +1,18 @@
+# Build artifacts
+*.o
+*.bin
+*.hex
+*.elf
+
+# Arduino build
+firmware-cubecell/build/
+
+# Temp files
+*.log
+*.tmp
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
