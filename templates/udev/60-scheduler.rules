@@ -1,0 +1,5 @@
+# Template LoRaCore — I/O scheduler mq-deadline para microSD
+# Fonte: docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md, Secao 16.3
+# Destino: /etc/udev/rules.d/60-scheduler.rules
+
+ACTION=="add|change", KERNEL=="mmcblk[0-9]*", ATTR{queue/scheduler}="mq-deadline"

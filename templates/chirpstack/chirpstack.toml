@@ -1,0 +1,32 @@
+# Template LoRaCore — ChirpStack v4 Network Server
+# Fonte: docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md, Secao 7.2
+# Destino: /etc/chirpstack/chirpstack.toml
+
+[logging]
+  level = "info"
+
+[postgresql]
+  dsn = "postgres://chirpstack:chirpstack@localhost/chirpstack?sslmode=disable"
+  max_open_connections = 30
+  min_idle_connections = 5
+  connection_recycling_method = "verified"
+
+[redis]
+  servers = ["redis://localhost/"]
+  cluster = false
+
+[network]
+  net_id = "000000"
+  enabled_regions = ["us915_0"]
+
+[api]
+  bind = "0.0.0.0:8080"
+  secret = "<SECRET>"
+
+[integration]
+  enabled = ["mqtt"]
+  [integration.mqtt]
+    server = "tcp://localhost:1883/"
+    json = true
+    qos = 1
+    clean_session = false

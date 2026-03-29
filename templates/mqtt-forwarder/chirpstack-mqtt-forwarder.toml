@@ -1,0 +1,27 @@
+# Template LoRaCore — ChirpStack MQTT Forwarder (Rust)
+# Fonte: docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md, Secao 5.2
+# Destino: /etc/chirpstack-mqtt-forwarder/chirpstack-mqtt-forwarder.toml
+
+[logging]
+  level="info"
+  log_to_syslog=false
+
+[mqtt]
+  topic_prefix="us915_0"
+  json=false
+  server="tcp://127.0.0.1:1883"
+  qos=1
+  clean_session=false
+  keep_alive_interval="30s"
+
+[backend]
+  enabled="semtech_udp"
+
+  [backend.filters]
+    forward_crc_ok=true
+    forward_crc_invalid=false
+    forward_crc_missing=false
+
+  [backend.semtech_udp]
+    bind="0.0.0.0:1700"
+    time_fallback_enabled=true

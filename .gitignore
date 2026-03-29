@@ -1,16 +1,35 @@
 # Build artifacts
 *.o
+*.a
 *.bin
 *.hex
 *.elf
+*.map
 
-# Arduino build
-firmware-cubecell/build/
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+examples/firmware/*/build/
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# PlatformIO local overrides
+platformio_local.ini
 
 # Temp files
 *.log
 *.tmp
 *.swp
+*.swo
 *~
 
 # OS

@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentacao do Protocolo
+    url: https://github.com/OWNER/LoRaCore/blob/main/docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md
+    about: Consulte a documentacao canonica antes de abrir uma issue sobre a infraestrutura
