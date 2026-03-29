@@ -33,6 +33,79 @@ Um **projeto consumidor** e qualquer sistema que usa a infraestrutura LoRaCore p
 | Documentacao de integracao (MQTT, REST, gRPC) | Mapeamento device ↔ funcao |
 | Device profiles genericos (Class A/C) | Regras de controle e UI |
 
+### 1.1 Modelo de Consumo
+
+O LoRaCore **nao e uma biblioteca que voce copia** para cada projeto. E **infraestrutura compartilhada** rodando no RPi5. Multiplos projetos conectam a mesma instancia via MQTT, REST e gRPC.
+
+```
+Projeto A (CoffeeControl) ──┐
+                             ├──► LoRaCore (RPi5) ◄── 1 instancia unica
+Projeto B (futuro)  ─────────┘
+```
+
+O que cada projeto consumidor faz:
+
+1. **Consulta** os templates e docs do repositorio LoRaCore para criar seus codecs, device profiles e configs
+2. **Conecta** ao MQTT/gRPC/REST da RPi5 para receber dados e enviar comandos
+3. **Mantem** seu firmware, backend e logica de negocio no proprio repositorio
+
+O repositorio LoRaCore e a **fonte de verdade** para configuracoes e documentacao da infraestrutura. Voce nao precisa clonar ou copiar o repositorio inteiro — apenas consulte e copie os artefatos relevantes (templates, codecs, exemplos).
+
+### 1.2 Multiplos Projetos na Mesma Infraestrutura
+
+A RPi5 suporta multiplos projetos simultaneamente. A separacao logica acontece dentro do ChirpStack — cada projeto usa sua propria **Application**, com devices, codecs e device profiles independentes.
+
+```
+Projeto 1 (Cafe)       ──► Application 1 ──► devices 1..N ─┐
+Projeto 2 (Irrigacao)  ──► Application 2 ──► devices 1..N ─┤
+Projeto 3 (Energia)    ──► Application 3 ──► devices 1..N ─┼──► LoRaCore (RPi5)
+Projeto 4 (...)        ──► Application 4 ──► devices 1..N ─┤
+Projeto 5 (...)        ──► Application 5 ──► devices 1..N ─┘
+```
+
+**Isolamento via MQTT:** cada Application tem seu proprio topico. Um backend so recebe dados dos devices da sua Application:
+
+```
+application/{app1_id}/device/+/event/up   ← so dados do Projeto 1
+application/{app2_id}/device/+/event/up   ← so dados do Projeto 2
+```
+
+**Isolamento via API:** cada Application tem seu ID. Operacoes REST e gRPC filtram por `applicationId`.
+
+**Limites praticos da RPi5:**
+
+| Recurso | Limite razoavel |
+|---------|----------------|
+| Devices simultaneos | ~200-500 (depende do intervalo de uplink) |
+| Uplinks/minuto | ~100-200 confortavel |
+| Applications (projetos) | Sem limite pratico |
+| MQTT subscribers | Dezenas sem problema |
+
+> **Escalabilidade:** se a quantidade de devices ou projetos crescer alem da capacidade da RPi5, a migracao e trocar o hardware (servidor mais robusto). A arquitetura do LoRaCore, os templates e os codecs continuam os mesmos — so muda o host.
+
+### 1.3 Arquitetura de Deploy: Servicos Nativos (sem containers)
+
+O LoRaCore roda **diretamente no sistema operacional** da RPi5, sem Docker ou containers. Todos os componentes sao servicos systemd nativos:
+
+| Servico | Tipo | Unit systemd |
+|---------|------|-------------|
+| Packet Forwarder (sx1302_hal) | Binario C | `lora-pkt-fwd` |
+| MQTT Forwarder | Binario Rust | `chirpstack-mqtt-forwarder` |
+| ChirpStack (Network Server) | Binario nativo | `chirpstack` |
+| REST API proxy | Binario nativo | `chirpstack-rest-api` |
+| Mosquitto (MQTT broker) | Pacote do sistema | `mosquitto` |
+| PostgreSQL | Pacote do sistema | `postgresql` |
+| Redis | Pacote do sistema | `redis-server` |
+
+**Por que nao containers:**
+
+- **Acesso ao hardware:** o Packet Forwarder precisa de acesso direto ao barramento SPI do modulo RAK2287 — containers adicionam complexidade desnecessaria para device passthrough
+- **Menor overhead:** a RPi5 tem recursos limitados; servicos nativos evitam a camada extra de virtualizacao
+- **Operacao offline:** sem necessidade de puxar imagens de registries externos
+- **Simplicidade operacional:** `systemctl status/restart/logs` cobre 100% do gerenciamento
+
+> **Nota para o consumidor:** o fato de a infraestrutura nao usar containers nao afeta a integracao. Seu backend (que roda no seu proprio servidor ou maquina) pode usar containers normalmente — a comunicacao e via rede (MQTT :1883, REST :8090, gRPC :8080).
+
 ---
 
 ## 2. Pre-requisitos
@@ -143,6 +216,16 @@ Tres mecanismos de integracao, cada um com seu caso de uso:
 | Enviar downlinks (producao) | gRPC | [REFERENCIA Secao 4](REFERENCIA_INTEGRACAO.md#4-grpc-api-downlinks-programaticos) |
 | Gerenciar devices (CRUD) | REST API | [REFERENCIA Secao 3](REFERENCIA_INTEGRACAO.md#3-rest-api-gerenciamento) |
 
+**Portas de integracao:**
+
+| Servico | Porta | Nota |
+|---------|-------|------|
+| MQTT (Mosquitto) | 1883 | Uplinks em tempo real |
+| REST API (chirpstack-rest-api) | 8090 | CRUD de devices, downlinks para scripts |
+| gRPC + Web UI (ChirpStack) | 8080 | gRPC e web UI compartilham a mesma porta |
+
+> **Nota sobre autenticacao:** A REST API requer um API token. Gere o token pela web UI em `http://<HOST>:8080` > API Keys. Se o endpoint `/api/internal/login` retornar 404 (incompatibilidade de versao chirpstack-rest-api vs chirpstack), use a web UI para gerar tokens ou acesse o PostgreSQL diretamente para operacoes administrativas.
+
 **Configuracao tipica do backend:**
 
 ```toml
@@ -152,7 +235,8 @@ Tres mecanismos de integracao, cada um com seu caso de uso:
 mqtt_broker = "<LORACORE_HOST>"
 mqtt_port = 1883
 mqtt_topic = "application/+/device/+/event/up"
-chirpstack_grpc = "<LORACORE_HOST>:8080"
+chirpstack_grpc = "<LORACORE_HOST>:8080"   # gRPC compartilha porta com a web UI
+chirpstack_rest = "<LORACORE_HOST>:8090"   # REST API (proxy separado)
 chirpstack_api_token = "<SEU_TOKEN>"
 ```
 
