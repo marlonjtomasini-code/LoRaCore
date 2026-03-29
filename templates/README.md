@@ -31,10 +31,13 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 | `mosquitto/` | `production.conf` | Mosquitto — broker MQTT de producao |
 | `systemd/` | `lora-pkt-fwd.service` | Unit file do packet forwarder |
 | `systemd/` | `chirpstack-mqtt-fwd-priority.conf` | Override de prioridade CPU para MQTT forwarder |
+| `systemd/` | `chirpstack-priority.conf` | Override de prioridade CPU para ChirpStack |
+| `systemd/` | `mosquitto-priority.conf` | Override de prioridade CPU para Mosquitto |
 | `systemd/` | `postgresql-io-priority.conf` | Override de prioridade I/O para PostgreSQL |
 | `sysctl/` | `90-lorawan.conf` | Tuning de buffers UDP (4 MB) |
 | `udev/` | `60-scheduler.rules` | I/O scheduler mq-deadline para microSD |
 | `codecs/` | `cubecell-class-a-sensor.js` | Decoder ChirpStack — CubeCell Class A |
+| `codecs/` | `cubecell-stress-test-device2.js` | Decoder ChirpStack — CubeCell Stress Test Device 2 (14B) |
 | `codecs/` | `rak3172-class-c-actuator.js` | Decoder + Encoder ChirpStack — RAK3172 Class C |
 | `codecs/` | `CODEC_TEMPLATE.js` | Esqueleto para novos codecs (3 funcoes) |
 | `codecs/` | `example-thermal-sensor.js` | Exemplo — sensor termico industrial (decode only) |

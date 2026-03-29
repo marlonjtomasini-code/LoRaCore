@@ -20,6 +20,9 @@ ExecStart=<PKT_FWD_PATH>/lora_pkt_fwd
 Restart=always
 RestartSec=5
 WatchdogSec=120
+CPUWeight=150
+MemoryHigh=64M
+MemoryMax=128M
 User=<USER>
 
 [Install]

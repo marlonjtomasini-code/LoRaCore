@@ -7,6 +7,12 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 ## [Nao publicado]
 
 ### Adicionado
+- Relatorio de stress test v2 (`docs/RELATORIO_STRESS_TEST_V2.md`): validacao do MQTT Forwarder (Rust) sob 6 fases de carga progressiva — entrega de 79% sob stress total vs 0% com Gateway Bridge (Go)
+- Systemd overrides para chirpstack e mosquitto (`templates/systemd/chirpstack-priority.conf`, `mosquitto-priority.conf`): CPUWeight, Nice, MemoryHigh/MemoryMax
+- Limites de memoria (MemoryHigh/MemoryMax) adicionados a todos os servicos criticos via systemd
+- Sysctl tuning para durabilidade do microSD: vm.swappiness=10, vm.dirty_ratio=10, vm.dirty_background_ratio=5
+- Firmware dual-device para stress test (`src/device1.cpp`, `src/device2.cpp`) com PlatformIO multi-environment
+- Codec para Device 2 do stress test (`templates/codecs/cubecell-stress-test-device2.js`): payload 14 bytes
 - Templates de backup e restore (`templates/backup/`): script de backup diario com sync para Google Drive via rclone, script de restauracao guiada interativo, guia de setup completo
 - Reestruturacao completa do repositorio para padrao open-source GitHub
 - Diretorio `templates/` com configuracoes reutilizaveis extraidas da documentacao
