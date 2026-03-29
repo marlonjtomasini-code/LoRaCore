@@ -148,12 +148,12 @@ LoRaCore/
 
 | Recurso | Endereco |
 |---------|---------|
-| Raspberry Pi 5 | `192.168.1.186` |
-| ChirpStack Web UI | `http://192.168.1.186:8080` |
-| ChirpStack REST API | `http://192.168.1.186:8090` |
-| MQTT Broker (Mosquitto) | `192.168.1.186:1883` |
-| PostgreSQL | `192.168.1.186:5432` |
-| Redis | `192.168.1.186:6379` |
+| Raspberry Pi 5 | `192.168.1.200` |
+| ChirpStack Web UI | `http://192.168.1.200:8080` |
+| ChirpStack REST API | `http://192.168.1.200:8090` |
+| MQTT Broker (Mosquitto) | `192.168.1.200:1883` |
+| PostgreSQL | `192.168.1.200:5432` |
+| Redis | `192.168.1.200:6379` |
 | Gateway EUI | `0x0016c001f118e87a` |
 | Gateway ID | `2CCF67FFFE576A1D` |
 | CubeCell test DevEUI | `3daa1dd8e5ceb357` |
@@ -172,19 +172,19 @@ LoRaCore/
 
 ```bash
 # Verificar servicos
-ssh marlon@192.168.1.186 "systemctl status lora-pkt-fwd chirpstack mosquitto"
+ssh marlon@192.168.1.200 "systemctl status lora-pkt-fwd chirpstack mosquitto"
 
 # Logs do ChirpStack (ultimos 30s)
-ssh marlon@192.168.1.186 "journalctl -u chirpstack -n 30 --no-pager --since '30 sec ago'"
+ssh marlon@192.168.1.200 "journalctl -u chirpstack -n 30 --no-pager --since '30 sec ago'"
 
 # Monitorar uplinks via MQTT
-mosquitto_sub -h 192.168.1.186 -t "application/+/device/+/event/up" -v
+mosquitto_sub -h 192.168.1.200 -t "application/+/device/+/event/up" -v
 
 # Monitor serial do CubeCell
 pio device monitor --baud 115200
 
 # Listar devices no ChirpStack
-curl -s http://192.168.1.186:8090/api/devices?limit=20 -H "Authorization: Bearer <TOKEN>"
+curl -s http://192.168.1.200:8090/api/devices?limit=20 -H "Authorization: Bearer <TOKEN>"
 ```
 
 ## Custom Instructions for Claude: AI Agent Governance
