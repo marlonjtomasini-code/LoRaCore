@@ -73,8 +73,13 @@ LoRaCore/
 
 ## Documentacao
 
-- [Documentacao canonica da infraestrutura](docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md) — referencia completa
+- [Documentacao canonica da infraestrutura](docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md) — referencia completa (22 secoes)
+- [Quick Start](docs/QUICK_START.md) — do zero ao primeiro uplink em 30 minutos
+- [Referencia de Integracao](docs/REFERENCIA_INTEGRACAO.md) — MQTT, REST API, schemas JSON, exemplos
+- [FAQ](docs/FAQ.md) — perguntas frequentes sobre capacidade, operacao e manutencao
+- [Glossario](docs/GLOSSARIO.md) — definicoes dos termos tecnicos LoRaWAN
 - [Relatorio de stress test](docs/RELATORIO_STRESS_TEST.md) — performance sob carga extrema
+- [Decisoes arquiteturais](docs/adr/) — ADRs com justificativas tecnicas
 - [Indice de templates](templates/README.md) — configuracoes reutilizaveis
 - [Exemplos](examples/README.md) — firmwares de teste e validacao
 

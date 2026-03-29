@@ -86,7 +86,15 @@ LoRaCore/
 │   ├── README.md                                # Indice da documentacao
 │   ├── DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md     # Referencia canonica da infraestrutura
 │   ├── RELATORIO_STRESS_TEST.md                 # Validacao de performance sob carga
+│   ├── QUICK_START.md                           # Do zero ao primeiro uplink em 30 min
+│   ├── REFERENCIA_INTEGRACAO.md                 # MQTT + REST API para projetos consumidores
+│   ├── FAQ.md                                   # Perguntas frequentes operacionais
+│   ├── GLOSSARIO.md                             # Termos tecnicos LoRaWAN
 │   ├── GUIA_CLAUDE_CODE.md                      # Guia rapido para o operador humano
+│   ├── adr/                                     # Architecture Decision Records
+│   │   ├── ADR-0001-mqtt-forwarder-rust-vs-gateway-bridge-go.md
+│   │   ├── ADR-0002-us915-subband-1.md
+│   │   └── ADR-0003-mqtt-como-camada-de-integracao.md
 │   └── operations/tasks/                        # Sistema de gestao de tarefas
 │       ├── README.md                            # Workflow do backlog
 │       ├── index.md                             # Indice de tarefas
