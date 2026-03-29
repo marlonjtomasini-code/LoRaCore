@@ -80,7 +80,7 @@ Device profiles definem o comportamento LoRaWAN dos seus devices (classe, codec,
 TOKEN="<SEU_TOKEN>"
 
 # Importar device profile Class A
-curl -X POST http://192.168.1.129:8090/api/device-profiles \
+curl -X POST http://192.168.1.186:8090/api/device-profiles \
   -H "Grpc-Metadata-Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d @templates/chirpstack/device-profiles/class-a-sensor-otaa.json
@@ -149,10 +149,10 @@ Tres mecanismos de integracao, cada um com seu caso de uso:
 # Exemplo de config.toml para um projeto consumidor
 
 [transport.lorawan]
-mqtt_broker = "192.168.1.129"
+mqtt_broker = "192.168.1.186"
 mqtt_port = 1883
 mqtt_topic = "application/+/device/+/event/up"
-chirpstack_grpc = "192.168.1.129:8080"
+chirpstack_grpc = "192.168.1.186:8080"
 chirpstack_api_token = "<SEU_TOKEN>"
 ```
 
@@ -171,7 +171,7 @@ def on_message(client, userdata, msg):
 
 client = mqtt.Client(client_id="meu-backend", clean_session=False)
 client.on_message = on_message
-client.connect("192.168.1.129", 1883, keepalive=60)
+client.connect("192.168.1.186", 1883, keepalive=60)
 client.subscribe("application/+/device/+/event/up", qos=1)
 client.loop_forever()
 ```
@@ -181,7 +181,7 @@ client.loop_forever()
 import grpc
 from chirpstack_api import api as chirpstack_api
 
-channel = grpc.insecure_channel("192.168.1.129:8080")
+channel = grpc.insecure_channel("192.168.1.186:8080")
 device_service = chirpstack_api.DeviceServiceStub(channel)
 metadata = [("authorization", f"Bearer {API_TOKEN}")]
 

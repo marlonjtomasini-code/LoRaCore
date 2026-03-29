@@ -77,8 +77,8 @@ sudo rclone config
 rclone config   # completar setup normalmente
 
 # Copiar o config para o RPi5:
-scp ~/.config/rclone/rclone.conf marlon@192.168.1.129:/tmp/
-ssh marlon@192.168.1.129 "sudo mkdir -p /root/.config/rclone && sudo mv /tmp/rclone.conf /root/.config/rclone/ && sudo chmod 600 /root/.config/rclone/rclone.conf"
+scp ~/.config/rclone/rclone.conf marlon@192.168.1.186:/tmp/
+ssh marlon@192.168.1.186 "sudo mkdir -p /root/.config/rclone && sudo mv /tmp/rclone.conf /root/.config/rclone/ && sudo chmod 600 /root/.config/rclone/rclone.conf"
 ```
 
 ### 3. Verificar conectividade

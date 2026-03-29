@@ -93,11 +93,11 @@ Tres formas:
    grep "ALERT OFFLINE" /var/log/lorawan-health.log
    ```
 
-2. **Web UI**: verificar `lastSeenAt` no painel do device em `http://192.168.1.129:8080`
+2. **Web UI**: verificar `lastSeenAt` no painel do device em `http://192.168.1.186:8080`
 
 3. **API REST**:
    ```bash
-   curl -s http://192.168.1.129:8090/api/devices/<DEV_EUI> \
+   curl -s http://192.168.1.186:8090/api/devices/<DEV_EUI> \
      -H "Grpc-Metadata-Authorization: Bearer <TOKEN>" | python3 -m json.tool
    ```
 
