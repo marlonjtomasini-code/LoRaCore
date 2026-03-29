@@ -1,12 +1,13 @@
 ---
 id: TASK-2026-0006
 title: Templates de monitoramento e observabilidade leve
-status: pending
-phase: analise
+status: done
+phase: concluido
 severity: S2
 owner: coordenador
 created: 2026-03-29
 updated: 2026-03-29
+closed: 2026-03-29
 depends_on: []
 blocked_by: []
 parent: ~
@@ -44,18 +45,15 @@ tags:
 
 ## Retomada
 
-ESTADO: aguardando_execucao
+ESTADO: concluido
 AGENTE: coordenador
-PROXIMA: ler Secao 17 do DOC_PROTOCOLO para especificacao dos scripts, ler lorawan-backup.sh para formato de log
-LER:
-- docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md (Secao 17)
-- templates/backup/lorawan-backup.sh (linhas 1-30 para formato de log, linhas 169-171 para referencia aos scripts)
-DECIDIDO:
-- shell scripts + logs > Prometheus/Grafana para RPi5 single-node (decisao a documentar no ADR-0004)
-- formato de log: [timestamp] mensagem (igual ao backup)
-- degradacao graceful: scripts devem funcionar mesmo se nem todos os 7 servicos estiverem instalados
-PENDENTE:
-- nenhuma
+RESULTADO:
+- 4 scripts criados em templates/monitoring/ (health_check, watchdog, device_monitor, daily_report)
+- logrotate-lorawan.conf criado (semanal, 12 semanas, compressao)
+- README.md com placeholders, cron setup e deploy guide
+- ADR-0004 documenta decisao scripts vs Prometheus
+- templates/README.md atualizado com indice monitoring
+- Todos os scripts validados com bash -n
 
 ## Analise Preliminar
 
@@ -96,14 +94,14 @@ A decisao de nao usar Prometheus/Grafana e deliberada: o RPi5 ja roda 7 servicos
 
 ## Checklist
 
-- [ ] Ler Secao 17 do DOC_PROTOCOLO para especificacoes
-- [ ] Ler lorawan-backup.sh para formato de log
-- [ ] Criar templates/monitoring/health_check.sh
-- [ ] Criar templates/monitoring/watchdog_concentrator.sh
-- [ ] Criar templates/monitoring/device_monitor.sh
-- [ ] Criar templates/monitoring/daily_report.sh
-- [ ] Criar templates/monitoring/logrotate-lorawan.conf
-- [ ] Criar templates/monitoring/README.md
-- [ ] Atualizar templates/README.md com diretorio monitoring
-- [ ] Criar docs/adr/ADR-0004-observabilidade-scripts-vs-prometheus.md
-- [ ] Validar todos os scripts com bash -n
+- [x] Ler Secao 17 do DOC_PROTOCOLO para especificacoes
+- [x] Ler lorawan-backup.sh para formato de log
+- [x] Criar templates/monitoring/health_check.sh
+- [x] Criar templates/monitoring/watchdog_concentrator.sh
+- [x] Criar templates/monitoring/device_monitor.sh
+- [x] Criar templates/monitoring/daily_report.sh
+- [x] Criar templates/monitoring/logrotate-lorawan.conf
+- [x] Criar templates/monitoring/README.md
+- [x] Atualizar templates/README.md com diretorio monitoring
+- [x] Criar docs/adr/ADR-0004-observabilidade-scripts-vs-prometheus.md
+- [x] Validar todos os scripts com bash -n

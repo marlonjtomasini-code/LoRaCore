@@ -46,6 +46,12 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 | `backup/` | `lorawan-backup.sh` | Backup diario: PostgreSQL + Redis + configs → Google Drive |
 | `backup/` | `lorawan-restore.sh` | Restauracao guiada (interativa, com --dry-run) |
 | `backup/` | `README.md` | Guia de setup: rclone, auth headless, cron, troubleshooting |
+| `monitoring/` | `health_check.sh` | Health check: servicos, memoria, disco, PULL_ACK, temperatura |
+| `monitoring/` | `watchdog_concentrator.sh` | Watchdog: auto-recovery do concentrador (PULL_ACK timeout) |
+| `monitoring/` | `device_monitor.sh` | Monitor de devices offline via ChirpStack REST API |
+| `monitoring/` | `daily_report.sh` | Relatorio diario: dashboard textual de toda a infraestrutura |
+| `monitoring/` | `logrotate-lorawan.conf` | Logrotate semanal (12 semanas retencao, compressao) |
+| `monitoring/` | `README.md` | Guia de deploy: placeholders, cron, logrotate |
 
 ## PostgreSQL vs SQLite
 
