@@ -62,8 +62,7 @@ jobs:
         run: |
           errors=0
           for f in $(find templates -name '*.toml' -type f); do
-            if ! python3 -c "import tomllib; open('$f','rb').read()" 2>&1 && \
-               ! python3 -c "import tomllib; tomllib.load(open('$f','rb'))" 2>&1; then
+            if ! python3 -c "import tomllib; tomllib.load(open('$f','rb'))" 2>&1; then
               echo "ERRO TOML invalido: $f"
               errors=$((errors + 1))
             fi
@@ -84,7 +83,7 @@ jobs:
         run: |
           # Patterns proibidos (exceto CLAUDE.md que e interno do agente)
           patterns=(
-            '/home/marlon/'
+            '/home/[^/]+/'
             '192\.168\.1\.[0-9]+'
           )
           # Arquivos permitidos (nao sao consumidos por projetos externos)
