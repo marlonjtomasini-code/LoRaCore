@@ -1,6 +1,6 @@
 # Referencia de Integracao — Como Consumir Dados do LoRaCore
 
-Guia para projetos consumidores que precisam receber dados de devices LoRaWAN e/ou gerenciar dispositivos programaticamente. Cobre os dois mecanismos de integracao: **MQTT** (dados em tempo real) e **REST API** (gerenciamento).
+Guia para projetos consumidores que precisam receber dados de devices LoRaWAN e/ou gerenciar dispositivos programaticamente. Cobre tres mecanismos de integracao: **MQTT** (dados em tempo real), **REST API** (gerenciamento) e **gRPC** (downlinks programaticos).
 
 ---
 
@@ -10,21 +10,22 @@ Guia para projetos consumidores que precisam receber dados de devices LoRaWAN e/
                           ┌─────────────────────────┐
                           │    Projeto Consumidor    │
                           │   (seu backend/app)      │
-                          └────┬──────────────┬──────┘
-                               │              │
-                    MQTT :1883 │              │ REST API :8090
-                   (tempo real)│              │ (gerenciamento)
-                               │              │
-                          ┌────┴──────────────┴──────┐
+                          └──┬──────────┬─────────┬──┘
+                             │          │         │
+                  MQTT :1883 │ REST :8090│  gRPC :8080
+                 (tempo real)│ (gestao)  │ (downlinks)
+                             │          │         │
+                          ┌──┴──────────┴─────────┴──┐
                           │      LoRaCore (RPi5)      │
                           │  Mosquitto ← ChirpStack   │
-                          └───────────────────────────┘
+                          └──────────────────────────┘
 ```
 
 | Mecanismo | Quando usar | Protocolo | Porta |
 |-----------|-------------|-----------|-------|
 | **MQTT** | Receber uplinks, joins, status em tempo real | TCP (pub/sub) | 1883 |
 | **REST API** | Criar/listar/remover devices, enviar downlinks, consultar estado | HTTP | 8090 |
+| **gRPC** | Downlinks programaticos em backends de producao | HTTP/2 (Protobuf) | 8080 |
 
 ---
 
@@ -337,9 +338,123 @@ curl -s http://192.168.1.129:8090/api/gateways?limit=100&tenantId=<TENANT_ID> \
 
 ---
 
-## 4. Exemplos Completos
+## 4. gRPC API (Downlinks Programaticos)
 
-### 4.1 Python: Subscriber MQTT para Processar Uplinks
+O ChirpStack v4 expoe uma API gRPC na mesma porta da web UI (8080). Para backends de producao que enviam downlinks com frequencia, gRPC oferece tipagem nativa (Protobuf), menor overhead que REST e stubs gerados automaticamente.
+
+### 4.1 Conexao
+
+| Parametro | Valor |
+|-----------|-------|
+| Host | `192.168.1.129` (ou hostname do RPi) |
+| Porta | `8080` (mesma da web UI — gRPC e HTTP/2 compartilham) |
+| Protocolo | gRPC sobre HTTP/2 (insecure em rede local) |
+| Pacote Python | `chirpstack-api` (`pip install chirpstack-api grpcio`) |
+| Autenticacao | Bearer token via metadata gRPC |
+
+### 4.2 Enfileirar Downlink (Python sincrono)
+
+Exemplo completo e funcional para enviar um downlink a um device:
+
+```python
+import grpc
+from chirpstack_api import api as chirpstack_api
+
+CHIRPSTACK_GRPC = "192.168.1.129:8080"
+API_TOKEN = "<SEU_TOKEN>"
+
+# Abrir canal gRPC (insecure para rede local)
+channel = grpc.insecure_channel(CHIRPSTACK_GRPC)
+device_service = chirpstack_api.DeviceServiceStub(channel)
+metadata = [("authorization", f"Bearer {API_TOKEN}")]
+
+# Montar request de downlink
+request = chirpstack_api.EnqueueDeviceQueueItemRequest(
+    queue_item=chirpstack_api.DeviceQueueItem(
+        dev_eui="<DEV_EUI>",
+        confirmed=False,       # True para exigir ACK do device
+        f_port=2,              # Porta LoRaWAN (1-223)
+        data=bytes([0x01, 0x02]),  # Payload binario
+    )
+)
+
+# Enviar
+response = device_service.Enqueue(request, metadata=metadata)
+print(f"Downlink enfileirado: id={response.id}")
+
+channel.close()
+```
+
+**Dependencias**: `pip install chirpstack-api grpcio`
+
+**Gerar API token**:
+```bash
+ssh marlon@192.168.1.129 "sudo chirpstack -c /etc/chirpstack create-api-key --name meu-backend"
+```
+
+### 4.3 Variante Assincrona (para backends de producao)
+
+Para backends baseados em asyncio (FastAPI, aiohttp):
+
+```python
+import grpc.aio
+from chirpstack_api import api as chirpstack_api
+
+CHIRPSTACK_GRPC = "192.168.1.129:8080"
+API_TOKEN = "<SEU_TOKEN>"
+
+async def enqueue_downlink(dev_eui: str, f_port: int, data: bytes, confirmed: bool = False):
+    async with grpc.aio.insecure_channel(CHIRPSTACK_GRPC) as channel:
+        device_service = chirpstack_api.DeviceServiceStub(channel)
+        metadata = [("authorization", f"Bearer {API_TOKEN}")]
+
+        request = chirpstack_api.EnqueueDeviceQueueItemRequest(
+            queue_item=chirpstack_api.DeviceQueueItem(
+                dev_eui=dev_eui,
+                confirmed=confirmed,
+                f_port=f_port,
+                data=data,
+            )
+        )
+
+        response = await device_service.Enqueue(request, metadata=metadata)
+        return response.id
+```
+
+**Dependencias**: `pip install chirpstack-api grpcio`
+
+### 4.4 Flush e Consulta de Fila
+
+```python
+# Limpar fila de downlinks pendentes
+flush_req = chirpstack_api.FlushDeviceQueueRequest(dev_eui="<DEV_EUI>")
+device_service.FlushQueue(flush_req, metadata=metadata)
+
+# Consultar fila atual
+list_req = chirpstack_api.GetDeviceQueueItemsRequest(dev_eui="<DEV_EUI>")
+queue = device_service.GetQueue(list_req, metadata=metadata)
+for item in queue.result:
+    print(f"  fPort={item.f_port} confirmed={item.confirmed} pending={item.is_pending}")
+```
+
+### 4.5 gRPC vs REST para Downlinks
+
+| Aspecto | REST API (`:8090`) | gRPC (`:8080`) |
+|---------|-------------------|----------------|
+| Simplicidade | `curl` / `requests` | Requer `chirpstack-api` |
+| Performance | HTTP/1.1 + JSON | HTTP/2 + Protobuf |
+| Tipagem | Sem (JSON dinamico) | Protobuf (stubs tipados) |
+| Caso de uso | Scripts, automacao simples | Backend de producao, alto volume |
+| Dependencias | Nenhuma especial | `grpcio` + `chirpstack-api` |
+| Streaming | Nao | Suportado |
+
+**Recomendacao**: use REST para scripts e prototipos, gRPC para backends de producao.
+
+---
+
+## 5. Exemplos Completos
+
+### 5.1 Python: Subscriber MQTT para Processar Uplinks
 
 ```python
 import json
@@ -376,7 +491,7 @@ client.loop_forever()
 
 **Dependencia**: `pip install paho-mqtt`
 
-### 4.2 Bash: Registrar Device e Monitorar
+### 5.2 Bash: Registrar Device e Monitorar
 
 ```bash
 #!/bin/bash
@@ -412,7 +527,7 @@ echo "Monitorando uplinks..."
 mosquitto_sub -h 192.168.1.129 -t "application/+/device/$DEV_EUI/event/up" -v
 ```
 
-### 4.3 Padrao de Integracao para Backend (FastAPI)
+### 5.3 Padrao de Integracao para Backend (FastAPI)
 
 ```python
 import json
@@ -465,5 +580,7 @@ def get_device(dev_eui: str):
 - [DOC_PROTOCOLO Secao 14](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md#14-topicos-mqtt-e-integracao-de-dados) — Topicos MQTT e formato de payload
 - [DOC_PROTOCOLO Secao 20](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md#20-registro-de-dispositivos) — Registro de devices via API
 - [DOC_PROTOCOLO Secao 15.6](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md#156-confirmacao-de-comandos-class-c-camada-de-aplicacao) — Confirmacao de comandos Class C
+- [GUIA_CONSUMIDOR.md](GUIA_CONSUMIDOR.md) — Guia completo de adocao do LoRaCore por projetos externos
 - [GLOSSARIO.md](GLOSSARIO.md) — Definicoes dos termos tecnicos
 - [ChirpStack REST API docs](https://www.chirpstack.io/docs/chirpstack/api/) — Referencia completa da API upstream
+- [ChirpStack gRPC API](https://www.chirpstack.io/docs/chirpstack/api/grpc/) — Referencia gRPC upstream

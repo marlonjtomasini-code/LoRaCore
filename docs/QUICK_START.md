@@ -2,6 +2,8 @@
 
 Guia pratico para adicionar seu primeiro device e ver dados fluindo. Pressupoe que a infraestrutura LoRaCore **ja esta instalada e rodando** no Raspberry Pi (se nao, siga a Secao 19 do [DOC_PROTOCOLO](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md#19-procedimento-de-instalacao-passo-a-passo)).
 
+> **Adotando o LoRaCore em um projeto existente?** Veja o [Guia do Consumidor](GUIA_CONSUMIDOR.md) para o fluxo completo de integracao.
+
 **Tempo estimado**: ~30 minutos
 **Material necessario**: CubeCell HTCC-AB01 + cabo USB + notebook com PlatformIO
 
@@ -209,7 +211,8 @@ Para Class A, o downlink sera entregue na proxima janela RX1/RX2 (apos o proximo
 
 ## Proximo Passo
 
+- **Adotar o LoRaCore no seu projeto**: [GUIA_CONSUMIDOR.md](GUIA_CONSUMIDOR.md) — fluxo completo de integracao
 - **Criar firmware customizado**: copiar `examples/firmware/cubecell-otaa-test/` e adaptar para o seu sensor
 - **Entender cada componente**: [DOC_PROTOCOLO Secoes 4-9](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md#4-camada-1---concentrador-lora-packet-forwarder)
-- **Integrar via MQTT no seu projeto**: [REFERENCIA_INTEGRACAO.md](REFERENCIA_INTEGRACAO.md)
+- **Integrar via MQTT/gRPC no seu projeto**: [REFERENCIA_INTEGRACAO.md](REFERENCIA_INTEGRACAO.md)
 - **Termos que voce nao conhece**: [GLOSSARIO.md](GLOSSARIO.md)

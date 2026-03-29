@@ -12,8 +12,7 @@ Ultima revisao: 2026-03-29
 
 | ID | Status | Fase | Sev | Titulo | Deps | Plano |
 |---|---|---|---|---|---|---|
-
-(nenhuma tarefa registrada)
+| TASK-2026-0001 | done | concluida | S2 | Generalizar templates, codecs e docs para multiplos projetos consumidores | — | — |
 
 ## Tarefas bloqueadas
 

@@ -1,0 +1,42 @@
+# Template LoRaCore — ChirpStack v4 Network Server (variante SQLite)
+# Fonte: docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md, Secao 7.2
+# Destino: /etc/chirpstack/chirpstack.toml
+#
+# Quando usar SQLite:
+#   - Deployments edge com poucos devices (< 100)
+#   - Desenvolvimento e testes locais
+#   - Ambientes sem PostgreSQL instalado
+#
+# Quando usar PostgreSQL (chirpstack.toml):
+#   - Producao com muitos devices
+#   - Acesso concorrente de multiplos servicos
+#   - Infraestrutura PostgreSQL ja existente
+#
+# Nota: Redis continua obrigatorio independente do banco escolhido.
+
+[logging]
+  level = "info"
+
+# --- Diferenca principal: [sqlite] em vez de [postgresql] ---
+[sqlite]
+  dsn = "sqlite:///var/lib/chirpstack/chirpstack.sqlite?_busy_timeout=5000"
+
+[redis]
+  servers = ["redis://localhost/"]
+  cluster = false
+
+[network]
+  net_id = "000000"
+  enabled_regions = ["us915_0"]
+
+[api]
+  bind = "0.0.0.0:8080"
+  secret = "<SECRET>"
+
+[integration]
+  enabled = ["mqtt"]
+  [integration.mqtt]
+    server = "tcp://localhost:1883/"
+    json = true
+    qos = 1
+    clean_session = false

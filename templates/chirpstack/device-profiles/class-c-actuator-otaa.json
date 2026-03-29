@@ -1,0 +1,20 @@
+{
+  "_comment": "Template LoRaCore — Device Profile Class C Actuator OTAA. Importar via REST API POST /api/device-profiles ou criar manualmente na web UI.",
+  "deviceProfile": {
+    "name": "LoRaCore-ClassC-Actuator-OTAA",
+    "description": "Atuador LoRaWAN Class C com ativacao OTAA. Mantem janela de recepcao sempre aberta para receber comandos a qualquer momento. Requer alimentacao externa (nao indicado para bateria). Personalize o nome, codec e timeout conforme seu projeto.",
+    "region": "US915",
+    "macVersion": "LORAWAN_1_0_3",
+    "regParamsRevision": "A",
+    "adrAlgorithmId": "default",
+    "supportsOtaa": true,
+    "supportsClassB": false,
+    "supportsClassC": true,
+    "classCTimeout": 300,
+    "payloadCodecRuntime": "JS",
+    "payloadCodecScript": "// Cole aqui o conteudo do seu codec JavaScript.\n// Use templates/codecs/CODEC_TEMPLATE.js como ponto de partida.\n// Exemplos: templates/codecs/example-actuator-bidirectional.js\n\nfunction decodeUplink(input) {\n  var bytes = input.bytes;\n  if (bytes.length < 1) { return { data: {} }; }\n  return { data: { raw: Array.from(bytes) } };\n}\n\nfunction encodeDownlink(input) {\n  var data = input.data;\n  return { bytes: [data.command || 0, data.value || 0] };\n}\n\nfunction decodeDownlink(input) {\n  var bytes = input.bytes;\n  if (bytes.length < 1) { return { data: {} }; }\n  return { data: { command: bytes[0], value: bytes[1] || 0 } };\n}",
+    "uplinkInterval": 60,
+    "flushQueueOnActivate": true,
+    "autoDetectMeasurements": true
+  }
+}

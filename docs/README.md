@@ -14,7 +14,8 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 | Documento | Descricao |
 |-----------|-----------|
 | [QUICK_START.md](QUICK_START.md) | Do zero ao primeiro uplink em 30 minutos (infra ja instalada) |
-| [REFERENCIA_INTEGRACAO.md](REFERENCIA_INTEGRACAO.md) | Como consumir dados via MQTT e REST API — schemas JSON, endpoints, exemplos Python/Bash |
+| [GUIA_CONSUMIDOR.md](GUIA_CONSUMIDOR.md) | Como adotar o LoRaCore em um projeto externo — passo a passo completo |
+| [REFERENCIA_INTEGRACAO.md](REFERENCIA_INTEGRACAO.md) | Como consumir dados via MQTT, REST API e gRPC — schemas JSON, endpoints, exemplos Python/Bash |
 | [FAQ.md](FAQ.md) | Perguntas frequentes sobre capacidade, manutencao, operacao e firmware |
 | [GLOSSARIO.md](GLOSSARIO.md) | Definicoes dos termos tecnicos LoRaWAN usados na documentacao |
 | [GUIA_CLAUDE_CODE.md](GUIA_CLAUDE_CODE.md) | Guia rapido para uso do Claude Code no projeto |
