@@ -94,6 +94,16 @@ LoRaCore/
 - [Indice de templates](templates/README.md) — configuracoes reutilizaveis
 - [Exemplos](examples/README.md) — firmwares de teste e validacao
 
+## Versionamento
+
+O LoRaCore segue [Semantic Versioning](https://semver.org/lang/pt-BR/):
+
+- **MAJOR** — mudancas incompativeis: topicos MQTT, schema de output dos codecs, parametros obrigatorios de templates
+- **MINOR** — novos templates, codecs, documentacao ou funcionalidades sem quebra de compatibilidade
+- **PATCH** — correcoes de bugs, typos e ajustes menores
+
+Releases disponiveis em [GitHub Releases](https://github.com/marlonjtomasini-code/LoRaCore/releases). Historico detalhado em [CHANGELOG.md](CHANGELOG.md).
+
 ## Contribuindo
 
 Veja [CONTRIBUTING.md](CONTRIBUTING.md) para diretrizes de contribuicao.

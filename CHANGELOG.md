@@ -4,7 +4,7 @@ Todas as mudancas relevantes do projeto sao documentadas neste arquivo.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
-## [Nao publicado]
+## [0.2.0] - 2026-03-29
 
 ### Adicionado
 - Relatorio de stress test v2 (`docs/RELATORIO_STRESS_TEST_V2.md`): validacao do MQTT Forwarder (Rust) sob 6 fases de carga progressiva — entrega de 79% sob stress total vs 0% com Gateway Bridge (Go)
