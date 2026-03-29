@@ -53,6 +53,8 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 | `monitoring/` | `daily_report.sh` | Relatorio diario: dashboard textual de toda a infraestrutura |
 | `monitoring/` | `logrotate-lorawan.conf` | Logrotate semanal (12 semanas retencao, compressao) |
 | `monitoring/` | `README.md` | Guia de deploy: placeholders, cron, logrotate |
+| `deploy/` | `setup-loracore.sh` | Script interativo de deploy completo (13 fases) |
+| `deploy/` | `README.md` | Prerequisitos, opcoes, disaster recovery |
 
 ## PostgreSQL vs SQLite
 

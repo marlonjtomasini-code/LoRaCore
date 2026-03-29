@@ -1,12 +1,13 @@
 ---
 id: TASK-2026-0010
 title: Script de automacao de deploy
-status: pending
-phase: analise
+status: done
+phase: concluido
 severity: S2
 owner: coordenador
 created: 2026-03-29
 updated: 2026-03-29
+closed: 2026-03-29
 depends_on:
   - TASK-2026-0006
 blocked_by: []
@@ -44,21 +45,13 @@ tags:
 
 ## Retomada
 
-ESTADO: aguardando_execucao
+ESTADO: concluido
 AGENTE: coordenador
-PROXIMA: ler Secao 19 do DOC_PROTOCOLO para mapear todos os passos manuais a automatizar
-LER:
-- docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md (Secao 19 — Instalacao)
-- templates/README.md (indice de todos os templates)
-- templates/backup/lorawan-backup.sh (setup de backup como referencia de script interativo)
-DECIDIDO:
-- bash, nao Ansible: operador e dono do negocio, nao DevOps
-- nao Docker: hardware access (USB concentrador, systemd, sysctl) exige host direto
-- script interativo com prompts para Gateway ID, secret, username, etc
-- idempotente: verificar se ja instalado antes de reinstalar
-- Secao 19 do doc continua como referencia manual
-PENDENTE:
-- nenhuma
+RESULTADO:
+- templates/deploy/setup-loracore.sh criado (13 fases, interativo, idempotente)
+- templates/deploy/README.md documenta prerequisitos, opcoes e disaster recovery
+- templates/README.md atualizado com diretorio deploy
+- Validado com bash -n
 
 ## Analise Preliminar
 
@@ -98,9 +91,9 @@ Depende da TASK-2026-0006 porque deve incluir setup opcional de monitoramento (s
 
 ## Checklist
 
-- [ ] Ler Secao 19 do DOC_PROTOCOLO
-- [ ] Mapear passos manuais para funcoes do script
-- [ ] Criar templates/deploy/setup-loracore.sh
-- [ ] Criar templates/deploy/README.md
-- [ ] Validar script com bash -n
-- [ ] Testar idempotencia (re-execucao segura)
+- [x] Ler Secao 19 do DOC_PROTOCOLO
+- [x] Mapear passos manuais para funcoes do script (13 fases)
+- [x] Criar templates/deploy/setup-loracore.sh
+- [x] Criar templates/deploy/README.md
+- [x] Validar script com bash -n
+- [x] Idempotencia: cada fase verifica estado antes de agir

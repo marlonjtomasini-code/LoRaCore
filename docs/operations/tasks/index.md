@@ -10,9 +10,7 @@ Ultima revisao: 2026-03-29 (producao roadmap adicionado)
 
 ## Tarefas abertas
 
-| ID | Status | Fase | Sev | Titulo | Deps | Plano |
-|---|---|---|---|---|---|---|
-| TASK-2026-0010 | pending | analise | S2 | Script de automacao de deploy | — | — |
+Nenhuma tarefa pendente.
 
 ## Tarefas bloqueadas
 
@@ -24,6 +22,7 @@ Ultima revisao: 2026-03-29 (producao roadmap adicionado)
 
 | ID | Status | Titulo | Encerrada |
 |---|---|---|---|
+| TASK-2026-0010 | done | Script de automacao de deploy | 2026-03-29 |
 | TASK-2026-0009 | done | Documentacao de seguranca expandida e ADR confirmed mode | 2026-03-29 |
 | TASK-2026-0008 | done | Runbooks operacionais para incidentes de producao | 2026-03-29 |
 | TASK-2026-0007 | done | Testes automatizados de codecs no CI | 2026-03-29 |
