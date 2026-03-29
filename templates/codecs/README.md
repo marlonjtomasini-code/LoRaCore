@@ -239,6 +239,36 @@ if (bytes.length < 6) {
 
 ---
 
+## Testes Automatizados
+
+Cada codec tem um arquivo de teste em `tests/test-<nome>.js`. Os testes usam `assert` nativo do Node.js (zero dependencias npm) e carregam o codec via `eval()` para simular o sandbox ES5 do ChirpStack.
+
+### Executar localmente
+
+```bash
+# Todos os testes
+for f in templates/codecs/tests/test-*.js; do node "$f"; done
+
+# Teste individual
+node templates/codecs/tests/test-cubecell-class-a-sensor.js
+```
+
+### O que cada teste valida
+
+- **Decode com bytes conhecidos** — verifica que valores especificos produzem o JSON esperado
+- **Error handling** — payload curto ou vazio retorna `{ errors: [...] }` em vez de crash
+- **Roundtrip** (codecs bidirecionais) — `encodeDownlink` → `decodeDownlink` preserva os valores originais
+
+### Criar teste para novo codec
+
+1. Copie um teste existente como base
+2. Ajuste o path do codec e os payloads de teste
+3. Nomeie como `tests/test-<nome-do-codec>.js`
+4. Execute `node tests/test-<nome>.js` — exit 0 = sucesso
+5. O CI executa automaticamente todos os `tests/test-*.js`
+
+---
+
 ## Arquivos neste Diretorio
 
 | Arquivo | Descricao |
@@ -247,7 +277,9 @@ if (bytes.length < 6) {
 | `example-thermal-sensor.js` | Sensor termico industrial (decode only, 6 bytes) |
 | `example-actuator-bidirectional.js` | Atuador bidirecional (decode + encode, 5+3 bytes) |
 | `cubecell-class-a-sensor.js` | Codec validado — CubeCell Class A (battery + uptime) |
+| `cubecell-stress-test-device2.js` | Codec validado — CubeCell Stress Test Device 2 (14 bytes) |
 | `rak3172-class-c-actuator.js` | Codec validado — RAK3172 Class C (status + GPIO + comando) |
+| `tests/test-*.js` | Testes automatizados (Node.js assert, zero deps) |
 
 ---
 

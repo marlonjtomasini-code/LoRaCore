@@ -33,6 +33,28 @@ jobs:
           fi
           echo "Todos os codecs validados com sucesso"
 
+  test-codecs:
+    name: Test Codecs (Node.js assert)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Executar testes de codecs
+        run: |
+          errors=0
+          for f in templates/codecs/tests/test-*.js; do
+            echo "--- $f ---"
+            if ! node "$f" 2>&1; then
+              echo "FALHA: $f"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "::error::$errors teste(s) de codec falharam"
+            exit 1
+          fi
+          echo "Todos os testes de codecs passaram"
+
   validate-templates:
     name: Validate Templates (JSON/TOML)
     runs-on: ubuntu-latest
