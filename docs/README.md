@@ -22,6 +22,16 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 | [GLOSSARIO.md](GLOSSARIO.md) | Definicoes dos termos tecnicos LoRaWAN usados na documentacao |
 | [GUIA_CLAUDE_CODE.md](GUIA_CLAUDE_CODE.md) | Guia rapido para uso do Claude Code no projeto |
 
+## Runbooks Operacionais
+
+| Runbook | Cenario |
+|---------|---------|
+| [RUNBOOK-001](runbooks/RUNBOOK-001-service-failure.md) | Servico systemd inativo |
+| [RUNBOOK-002](runbooks/RUNBOOK-002-sd-card-failure.md) | Falha de microSD / filesystem read-only |
+| [RUNBOOK-003](runbooks/RUNBOOK-003-gateway-not-receiving.md) | Gateway nao recebe uplinks |
+| [RUNBOOK-004](runbooks/RUNBOOK-004-backup-failure.md) | Falha no backup diario |
+| [RUNBOOK-005](runbooks/RUNBOOK-005-device-offline.md) | Device offline |
+
 ## Decisoes Arquiteturais (ADR)
 
 | ADR | Titulo |
@@ -29,6 +39,7 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 | [ADR-0001](adr/ADR-0001-mqtt-forwarder-rust-vs-gateway-bridge-go.md) | MQTT Forwarder (Rust) vs Gateway Bridge (Go) |
 | [ADR-0002](adr/ADR-0002-us915-subband-1.md) | US915 Sub-band 1 |
 | [ADR-0003](adr/ADR-0003-mqtt-como-camada-de-integracao.md) | MQTT como camada de integracao |
+| [ADR-0004](adr/ADR-0004-observabilidade-scripts-vs-prometheus.md) | Observabilidade via scripts shell vs Prometheus/Grafana |
 
 ## Gestao de Tarefas
 

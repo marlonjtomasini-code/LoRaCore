@@ -1,12 +1,13 @@
 ---
 id: TASK-2026-0008
 title: Runbooks operacionais para incidentes de producao
-status: pending
-phase: analise
+status: done
+phase: concluido
 severity: S2
 owner: coordenador
 created: 2026-03-29
 updated: 2026-03-29
+closed: 2026-03-29
 depends_on:
   - TASK-2026-0006
 blocked_by: []
@@ -43,19 +44,13 @@ tags:
 
 ## Retomada
 
-ESTADO: aguardando_execucao
+ESTADO: concluido
 AGENTE: coordenador
-PROXIMA: ler Secao 22 do DOC_PROTOCOLO (troubleshooting) e stress test v3 para cenarios reais
-LER:
-- docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md (Secao 22 — Troubleshooting)
-- docs/RELATORIO_STRESS_TEST_V3.md (cenarios de falha reais)
-- templates/backup/lorawan-restore.sh (procedimento de restore)
-DECIDIDO:
-- 5 runbooks cobrindo cenarios mais provaveis em chao de fabrica
-- formato: deteccao -> triagem -> recovery -> pos-incidente
-- linguagem acessivel para operador nao-DevOps
-PENDENTE:
-- nenhuma
+RESULTADO:
+- 5 runbooks criados em docs/runbooks/
+- README.md do runbooks com indice, triggers e ordem de restart
+- docs/README.md atualizado com secao Runbooks e ADR-0004
+- Baseado em Secao 22 (troubleshooting) e stress test v3 (cenarios reais)
 
 ## Analise Preliminar
 
@@ -89,13 +84,13 @@ Os 5 cenarios cobertos foram selecionados com base nos modos de falha observados
 
 ## Checklist
 
-- [ ] Ler Secao 22 do DOC_PROTOCOLO
-- [ ] Ler stress test v3 para cenarios reais de falha
-- [ ] Ler lorawan-restore.sh para procedimento de restore
-- [ ] Criar docs/runbooks/README.md (indice)
-- [ ] Criar RUNBOOK-001-service-failure.md
-- [ ] Criar RUNBOOK-002-sd-card-failure.md
-- [ ] Criar RUNBOOK-003-gateway-not-receiving.md
-- [ ] Criar RUNBOOK-004-backup-failure.md
-- [ ] Criar RUNBOOK-005-device-offline.md
-- [ ] Atualizar docs/README.md
+- [x] Ler Secao 22 do DOC_PROTOCOLO
+- [x] Ler stress test v3 para cenarios reais de falha
+- [x] Ler lorawan-restore.sh para procedimento de restore
+- [x] Criar docs/runbooks/README.md (indice)
+- [x] Criar RUNBOOK-001-service-failure.md
+- [x] Criar RUNBOOK-002-sd-card-failure.md
+- [x] Criar RUNBOOK-003-gateway-not-receiving.md
+- [x] Criar RUNBOOK-004-backup-failure.md
+- [x] Criar RUNBOOK-005-device-offline.md
+- [x] Atualizar docs/README.md

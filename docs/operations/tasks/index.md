@@ -12,7 +12,6 @@ Ultima revisao: 2026-03-29 (producao roadmap adicionado)
 
 | ID | Status | Fase | Sev | Titulo | Deps | Plano |
 |---|---|---|---|---|---|---|
-| TASK-2026-0008 | pending | analise | S2 | Runbooks operacionais para incidentes de producao | — | — |
 | TASK-2026-0009 | pending | analise | S3 | Documentacao de seguranca expandida e ADR confirmed mode | — | — |
 | TASK-2026-0010 | pending | analise | S2 | Script de automacao de deploy | — | — |
 
@@ -26,6 +25,7 @@ Ultima revisao: 2026-03-29 (producao roadmap adicionado)
 
 | ID | Status | Titulo | Encerrada |
 |---|---|---|---|
+| TASK-2026-0008 | done | Runbooks operacionais para incidentes de producao | 2026-03-29 |
 | TASK-2026-0007 | done | Testes automatizados de codecs no CI | 2026-03-29 |
 | TASK-2026-0006 | done | Templates de monitoramento e observabilidade leve | 2026-03-29 |
 | TASK-2026-0005 | done | Release Engineering — tags, semver, GitHub Releases | 2026-03-29 |
