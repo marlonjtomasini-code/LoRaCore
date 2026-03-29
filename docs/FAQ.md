@@ -34,7 +34,7 @@ Sim, mas requer hardware adicional. Cada concentrador SX1302 cobre 8 canais de 1
 
 ```bash
 # 1. Backup antes de atualizar
-sudo bash /home/marlon/backup_chirpstack.sh
+sudo bash /home/<USER>/lorawan-backup.sh
 
 # 2. Atualizar pacotes
 sudo apt update
@@ -93,11 +93,11 @@ Tres formas:
    grep "ALERT OFFLINE" /var/log/lorawan-health.log
    ```
 
-2. **Web UI**: verificar `lastSeenAt` no painel do device em `http://192.168.1.186:8080`
+2. **Web UI**: verificar `lastSeenAt` no painel do device em `http://<LORACORE_HOST>:8080`
 
 3. **API REST**:
    ```bash
-   curl -s http://192.168.1.186:8090/api/devices/<DEV_EUI> \
+   curl -s http://<LORACORE_HOST>:8090/api/devices/<DEV_EUI> \
      -H "Grpc-Metadata-Authorization: Bearer <TOKEN>" | python3 -m json.tool
    ```
 

@@ -1,7 +1,7 @@
 ---
 id: TASK-2026-0003
 title: Migrar backup rclone de OAuth para Google Service Account
-status: pending
+status: blocked
 phase: analise
 severity: S3
 owner: coordenador
@@ -9,7 +9,8 @@ created: 2026-03-29
 updated: 2026-03-29
 depends_on:
   - TASK-2026-0002
-blocked_by: []
+blocked_by:
+  - "usuario: criar Google Service Account e compartilhar pasta"
 parent: ~
 children: []
 plan_doc: ~

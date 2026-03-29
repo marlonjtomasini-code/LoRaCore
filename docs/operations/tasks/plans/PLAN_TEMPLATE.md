@@ -38,10 +38,10 @@
 
 | Recurso | Detalhe |
 |---------|---------|
-| Raspberry Pi 5 | 192.168.1.186 |
-| ChirpStack Web UI | http://192.168.1.186:8080 |
-| ChirpStack REST API | http://192.168.1.186:8090 |
-| MQTT Broker | 192.168.1.186:1883 |
+| Raspberry Pi 5 | <LORACORE_HOST> |
+| ChirpStack Web UI | http://<LORACORE_HOST>:8080 |
+| ChirpStack REST API | http://<LORACORE_HOST>:8090 |
+| MQTT Broker | <LORACORE_HOST>:1883 |
 | Porta serial | /dev/ttyUSB0 (ou /dev/ttyACM0) |
 | Device EUI | (preencher) |
 | Ferramentas | PlatformIO, mosquitto_sub, ssh |

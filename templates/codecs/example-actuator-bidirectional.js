@@ -55,7 +55,7 @@ function decodeUplink(input) {
   var bytes = input.bytes;
 
   if (bytes.length < 5) {
-    return { data: {} };
+    return { errors: ["payload too short: expected 5 bytes, got " + bytes.length] };
   }
 
   var status = bytes[0];
@@ -117,7 +117,7 @@ function decodeDownlink(input) {
   var bytes = input.bytes;
 
   if (bytes.length < 3) {
-    return { data: {} };
+    return { errors: ["downlink payload too short: expected 3 bytes, got " + bytes.length] };
   }
 
   var cmdByte = bytes[0];

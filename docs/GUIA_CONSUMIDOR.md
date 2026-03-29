@@ -80,7 +80,7 @@ Device profiles definem o comportamento LoRaWAN dos seus devices (classe, codec,
 TOKEN="<SEU_TOKEN>"
 
 # Importar device profile Class A
-curl -X POST http://192.168.1.186:8090/api/device-profiles \
+curl -X POST http://<LORACORE_HOST>:8090/api/device-profiles \
   -H "Grpc-Metadata-Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d @templates/chirpstack/device-profiles/class-a-sensor-otaa.json
@@ -149,10 +149,10 @@ Tres mecanismos de integracao, cada um com seu caso de uso:
 # Exemplo de config.toml para um projeto consumidor
 
 [transport.lorawan]
-mqtt_broker = "192.168.1.186"
+mqtt_broker = "<LORACORE_HOST>"
 mqtt_port = 1883
 mqtt_topic = "application/+/device/+/event/up"
-chirpstack_grpc = "192.168.1.186:8080"
+chirpstack_grpc = "<LORACORE_HOST>:8080"
 chirpstack_api_token = "<SEU_TOKEN>"
 ```
 
@@ -171,7 +171,7 @@ def on_message(client, userdata, msg):
 
 client = mqtt.Client(client_id="meu-backend", clean_session=False)
 client.on_message = on_message
-client.connect("192.168.1.186", 1883, keepalive=60)
+client.connect("<LORACORE_HOST>", 1883, keepalive=60)
 client.subscribe("application/+/device/+/event/up", qos=1)
 client.loop_forever()
 ```
@@ -181,7 +181,7 @@ client.loop_forever()
 import grpc
 from chirpstack_api import api as chirpstack_api
 
-channel = grpc.insecure_channel("192.168.1.186:8080")
+channel = grpc.insecure_channel("<LORACORE_HOST>:8080")
 device_service = chirpstack_api.DeviceServiceStub(channel)
 metadata = [("authorization", f"Bearer {API_TOKEN}")]
 
@@ -238,7 +238,7 @@ Cenario ficticio para ilustrar o fluxo completo de adocao.
 // Payload: [moisture_hi, moisture_lo, temp_hi, temp_lo, battery_mv_hi, battery_mv_lo]
 function decodeUplink(input) {
   var bytes = input.bytes;
-  if (bytes.length < 6) { return { data: {} }; }
+  if (bytes.length < 6) { return { errors: ["payload too short: expected 6 bytes, got " + bytes.length] }; }
 
   var moisture = (bytes[0] << 8) | bytes[1];  // x10, ex: 425 = 42.5%
   var tempRaw = (bytes[2] << 8) | bytes[3];
@@ -263,7 +263,7 @@ function decodeUplink(input) {
 // Downlink: [command] — 0x01=open, 0x02=close
 function decodeUplink(input) {
   var bytes = input.bytes;
-  if (bytes.length < 4) { return { data: {} }; }
+  if (bytes.length < 4) { return { errors: ["payload too short: expected 4 bytes, got " + bytes.length] }; }
   return {
     data: {
       valve_state: bytes[0] === 1 ? "open" : "closed",

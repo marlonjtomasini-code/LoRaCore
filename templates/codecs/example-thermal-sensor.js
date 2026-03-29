@@ -20,7 +20,7 @@ function decodeUplink(input) {
   var bytes = input.bytes;
 
   if (bytes.length < 6) {
-    return { data: {} };
+    return { errors: ["payload too short: expected 6 bytes, got " + bytes.length] };
   }
 
   // Temperatura: int16 signed big-endian (x100)

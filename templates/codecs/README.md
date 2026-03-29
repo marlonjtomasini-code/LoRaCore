@@ -35,12 +35,14 @@ ChirpStack Web UI ──decodeDownlink()──> exibe downlink legivel
 //     recvTime: Date      // timestamp de recepcao
 //   }
 //
-// retorno:
+// retorno (sucesso):
 //   { data: { campo1: valor1, campo2: valor2, ... } }
+// retorno (erro):
+//   { errors: ["descricao do erro"] }
 
 function decodeUplink(input) {
   var bytes = input.bytes;
-  if (bytes.length < 4) { return { data: {} }; }
+  if (bytes.length < 4) { return { errors: ["payload too short: expected 4 bytes, got " + bytes.length] }; }
   var temperature = (bytes[0] << 8) | bytes[1];
   return { data: { temperature: temperature } };
 }
@@ -205,6 +207,22 @@ function decodeUplink(input) {
     return { data: { type: "status", /* ... */ } };
   }
 
+  return { errors: ["unknown fPort: " + input.fPort] };
+}
+```
+
+### Tratamento de erros
+
+Ao detectar payload invalido, retorne `{ errors: ["mensagem"] }` em vez de `{ data: {} }`. O ChirpStack v4 publica erros de codec no topico MQTT `application/<app_id>/device/<dev_eui>/event/error` e exibe na web UI, facilitando debug em producao.
+
+```javascript
+// Correto — erro visivel no ChirpStack
+if (bytes.length < 6) {
+  return { errors: ["payload too short: expected 6 bytes, got " + bytes.length] };
+}
+
+// Evitar — falha silenciosa, dificil de diagnosticar
+if (bytes.length < 6) {
   return { data: {} };
 }
 ```

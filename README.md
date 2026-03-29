@@ -28,6 +28,13 @@ LoRaCore **nao e um projeto de firmware** — firmwares de dispositivos pertence
 | Ativacao | OTAA (Over-The-Air Activation) | - |
 | Operacao | 100% offline (sem dependencia de internet) | - |
 
+## Escopo e Limitacoes Conhecidas
+
+- **Regiao**: Templates e documentacao cobrem **US915 sub-band 1** (canais 0-7 + canal 64). Outras regioes (EU868, AU915, AS923) requerem adaptacao dos templates de packet forwarder e ChirpStack
+- **Ativacao**: Apenas **OTAA** e documentado e recomendado. ABP e suportado pelo ChirpStack mas nao coberto por templates ou guias
+- **Hardware validado**: RPi5 + RAK2287 (SX1302). Outros concentradores LoRa podem funcionar mas nao foram testados
+- **Idioma**: Documentacao em **Portugues (pt-BR)**. Templates de configuracao e codecs usam ingles nos nomes de campos
+
 ## Estrutura do Repositorio
 
 ```
@@ -79,7 +86,9 @@ LoRaCore/
 - [Referencia de Integracao](docs/REFERENCIA_INTEGRACAO.md) — MQTT, REST API, schemas JSON, exemplos
 - [FAQ](docs/FAQ.md) — perguntas frequentes sobre capacidade, operacao e manutencao
 - [Glossario](docs/GLOSSARIO.md) — definicoes dos termos tecnicos LoRaWAN
+- [Guia do Consumidor](docs/GUIA_CONSUMIDOR.md) — como adotar o LoRaCore no seu projeto
 - [Relatorio de stress test](docs/RELATORIO_STRESS_TEST.md) — performance sob carga extrema
+- [Relatorio de stress test v2](docs/RELATORIO_STRESS_TEST_V2.md) — validacao do MQTT Forwarder (Rust) sob carga progressiva
 - [Decisoes arquiteturais](docs/adr/) — ADRs com justificativas tecnicas
 - [Indice de templates](templates/README.md) — configuracoes reutilizaveis
 - [Exemplos](examples/README.md) — firmwares de teste e validacao

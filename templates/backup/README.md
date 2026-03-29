@@ -77,8 +77,8 @@ sudo rclone config
 rclone config   # completar setup normalmente
 
 # Copiar o config para o RPi5:
-scp ~/.config/rclone/rclone.conf marlon@192.168.1.186:/tmp/
-ssh marlon@192.168.1.186 "sudo mkdir -p /root/.config/rclone && sudo mv /tmp/rclone.conf /root/.config/rclone/ && sudo chmod 600 /root/.config/rclone/rclone.conf"
+scp ~/.config/rclone/rclone.conf <USER>@<LORACORE_HOST>:/tmp/
+ssh <USER>@<LORACORE_HOST> "sudo mkdir -p /root/.config/rclone && sudo mv /tmp/rclone.conf /root/.config/rclone/ && sudo chmod 600 /root/.config/rclone/rclone.conf"
 ```
 
 ### 3. Verificar conectividade
@@ -134,7 +134,7 @@ cat /var/log/lorawan-backup.log
 sudo crontab -e
 
 # Adicionar a linha:
-0 3 * * * /bin/bash /home/marlon/lorawan-backup.sh
+0 3 * * * /bin/bash /home/<USER>/lorawan-backup.sh
 ```
 
 ### 7. Instalar script de restore (opcional)

@@ -91,6 +91,8 @@ LoRaCore/
 │   ├── FAQ.md                                   # Perguntas frequentes operacionais
 │   ├── GLOSSARIO.md                             # Termos tecnicos LoRaWAN
 │   ├── GUIA_CLAUDE_CODE.md                      # Guia rapido para o operador humano
+│   ├── GUIA_CONSUMIDOR.md                       # Como adotar o LoRaCore em projetos externos
+│   ├── RELATORIO_STRESS_TEST_V2.md              # Validacao do MQTT Forwarder (Rust) sob carga
 │   ├── adr/                                     # Architecture Decision Records
 │   │   ├── ADR-0001-mqtt-forwarder-rust-vs-gateway-bridge-go.md
 │   │   ├── ADR-0002-us915-subband-1.md
@@ -162,6 +164,7 @@ LoRaCore/
 - `chirpstack-mqtt-forwarder` — MQTT Forwarder (Rust)
 - `mosquitto` — Broker MQTT
 - `chirpstack` — Network Server
+- `chirpstack-rest-api` — Proxy REST para API gRPC
 - `postgresql` — Banco de dados
 - `redis-server` — Cache
 

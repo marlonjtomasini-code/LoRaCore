@@ -7,6 +7,8 @@ Guia pratico para adicionar seu primeiro device e ver dados fluindo. Pressupoe q
 **Tempo estimado**: ~30 minutos
 **Material necessario**: CubeCell HTCC-AB01 + cabo USB + notebook com PlatformIO
 
+> **Placeholders**: Ao longo deste guia, substitua `<LORACORE_HOST>` pelo IP/hostname do seu RPi, `<USER>` pelo usuario do sistema, `<DEV_EUI>` e `<APP_KEY>` pelos valores gerados no Passo 3.
+
 ---
 
 ## Passo 1: Verificar Saude da Infra (2 min)
@@ -14,7 +16,7 @@ Guia pratico para adicionar seu primeiro device e ver dados fluindo. Pressupoe q
 Confirme que todos os servicos estao rodando:
 
 ```bash
-ssh marlon@192.168.1.186 "systemctl is-active postgresql redis-server mosquitto chirpstack chirpstack-mqtt-forwarder chirpstack-rest-api lora-pkt-fwd"
+ssh <USER>@<LORACORE_HOST> "systemctl is-active postgresql redis-server mosquitto chirpstack chirpstack-mqtt-forwarder chirpstack-rest-api lora-pkt-fwd"
 ```
 
 **Esperado**: 7 linhas com `active`. Se algum estiver `inactive` ou `failed`, verifique com `journalctl -u <servico> -n 20`.
@@ -22,7 +24,7 @@ ssh marlon@192.168.1.186 "systemctl is-active postgresql redis-server mosquitto 
 Confirme que o gateway esta comunicando:
 
 ```bash
-ssh marlon@192.168.1.186 "journalctl -u lora-pkt-fwd --since '2 min ago' --no-pager | grep PULL_ACK"
+ssh <USER>@<LORACORE_HOST> "journalctl -u lora-pkt-fwd --since '2 min ago' --no-pager | grep PULL_ACK"
 ```
 
 **Esperado**: linhas com `PULL_ACK` recentes (a cada ~10s).
@@ -31,7 +33,7 @@ ssh marlon@192.168.1.186 "journalctl -u lora-pkt-fwd --since '2 min ago' --no-pa
 
 ## Passo 2: Criar Application e Device Profile no ChirpStack (5 min)
 
-Acesse a Web UI: `http://192.168.1.186:8080` (login: `admin` / `admin`).
+Acesse a Web UI: `http://<LORACORE_HOST>:8080` (login: `admin` / `admin`).
 
 ### 2.1 Criar Application (se ainda nao existe)
 
@@ -138,7 +140,7 @@ Aguarde o join (pode levar de 5s a 2min na primeira vez):
 Em outro terminal:
 
 ```bash
-ssh marlon@192.168.1.186 "journalctl -u chirpstack -f --no-pager" | grep -i "join\|uplink"
+ssh <USER>@<LORACORE_HOST> "journalctl -u chirpstack -f --no-pager" | grep -i "join\|uplink"
 ```
 
 **Esperado**: mensagens de `JoinRequest received` seguidas de `JoinAccept sent`.
@@ -158,7 +160,7 @@ As 3 causas mais comuns:
 Abrir um subscriber MQTT para ver os dados decodificados:
 
 ```bash
-mosquitto_sub -h 192.168.1.186 -t "application/+/device/+/event/up" -v
+mosquitto_sub -h <LORACORE_HOST> -t "application/+/device/+/event/up" -v
 ```
 
 **Esperado**: JSON com os dados decodificados pelo codec:
@@ -190,15 +192,15 @@ Testar o envio de um comando do servidor para o device:
 
 ```bash
 # Gerar API key (se ainda nao tem)
-ssh marlon@192.168.1.186 "sudo chirpstack -c /etc/chirpstack create-api-key --name quickstart"
+ssh <USER>@<LORACORE_HOST> "sudo chirpstack -c /etc/chirpstack create-api-key --name quickstart"
 
 # Enfileirar downlink (base64 de [0x01, 0x02])
-curl -X POST http://192.168.1.186:8090/api/devices/3daa1dd8e5ceb357/queue \
+curl -X POST http://<LORACORE_HOST>:8090/api/devices/<DEV_EUI>/queue \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
     "queueItem": {
-      "devEui": "3daa1dd8e5ceb357",
+      "devEui": "<DEV_EUI>",
       "fPort": 2,
       "data": "AQI="
     }

@@ -12,18 +12,19 @@ Ultima revisao: 2026-03-29
 
 | ID | Status | Fase | Sev | Titulo | Deps | Plano |
 |---|---|---|---|---|---|---|
-| TASK-2026-0001 | done | concluida | S2 | Generalizar templates, codecs e docs para multiplos projetos consumidores | — | — |
-| TASK-2026-0002 | done | concluida | S2 | Implementar backup diario com sync para Google Drive | — | — |
-| TASK-2026-0003 | pending | analise | S3 | Migrar backup rclone de OAuth para Google Service Account | TASK-2026-0002 | — |
-| TASK-2026-0004 | done | concluida | S2 | Hardening pos-stress-test v2 (systemd, sysctl, codec) | — | — |
+
+(nenhuma)
 
 ## Tarefas bloqueadas
 
-(nenhuma)
+| ID | Status | Fase | Sev | Titulo | Bloqueio |
+|---|---|---|---|---|---|
+| TASK-2026-0003 | blocked | analise | S3 | Migrar backup rclone de OAuth para Google Service Account | usuario: criar Google Service Account |
 
 ## Arquivadas recentes
 
 | ID | Status | Titulo | Encerrada |
 |---|---|---|---|
-
-(nenhuma)
+| TASK-2026-0004 | done | Hardening pos-stress-test v2 (systemd, sysctl, codec) | 2026-03-29 |
+| TASK-2026-0002 | done | Implementar backup diario com sync para Google Drive | 2026-03-29 |
+| TASK-2026-0001 | done | Generalizar templates, codecs e docs para multiplos projetos consumidores | 2026-03-29 |

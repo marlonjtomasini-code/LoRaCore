@@ -2,6 +2,8 @@
 
 Guia para projetos consumidores que precisam receber dados de devices LoRaWAN e/ou gerenciar dispositivos programaticamente. Cobre tres mecanismos de integracao: **MQTT** (dados em tempo real), **REST API** (gerenciamento) e **gRPC** (downlinks programaticos).
 
+> **Placeholders**: Substitua `<LORACORE_HOST>` pelo IP/hostname do seu RPi, `<USER>` pelo usuario do sistema, `<TOKEN>` pelo API token gerado no ChirpStack.
+
 ---
 
 ## 1. Visao Geral
@@ -35,7 +37,7 @@ Guia para projetos consumidores que precisam receber dados de devices LoRaWAN e/
 
 | Parametro | Valor |
 |-----------|-------|
-| Host | `192.168.1.186` (ou hostname do RPi) |
+| Host | `<LORACORE_HOST>` (ou hostname do RPi) |
 | Porta | `1883` |
 | Autenticacao | Nenhuma (`allow_anonymous true` no Mosquitto) |
 | QoS recomendado | 1 (at least once) |
@@ -213,14 +215,14 @@ Publicado quando o device confirma recebimento de um downlink:
 
 ## 3. REST API (Gerenciamento)
 
-Base URL: `http://192.168.1.186:8090/api`
+Base URL: `http://<LORACORE_HOST>:8090/api`
 
 ### 3.1 Autenticacao
 
 Gerar API key:
 
 ```bash
-ssh marlon@192.168.1.186 "sudo chirpstack -c /etc/chirpstack create-api-key --name meu-backend"
+ssh <USER>@<LORACORE_HOST> "sudo chirpstack -c /etc/chirpstack create-api-key --name meu-backend"
 ```
 
 Incluir em toda requisicao:
@@ -233,13 +235,13 @@ Header: Grpc-Metadata-Authorization: Bearer <TOKEN>
 
 **Listar devices:**
 ```bash
-curl -s http://192.168.1.186:8090/api/devices?limit=100&applicationId=<APP_ID> \
+curl -s http://<LORACORE_HOST>:8090/api/devices?limit=100&applicationId=<APP_ID> \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>"
 ```
 
 **Criar device:**
 ```bash
-curl -X POST http://192.168.1.186:8090/api/devices \
+curl -X POST http://<LORACORE_HOST>:8090/api/devices \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -256,7 +258,7 @@ curl -X POST http://192.168.1.186:8090/api/devices \
 
 **Definir chaves OTAA:**
 ```bash
-curl -X POST http://192.168.1.186:8090/api/devices/<DEV_EUI>/keys \
+curl -X POST http://<LORACORE_HOST>:8090/api/devices/<DEV_EUI>/keys \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -270,19 +272,19 @@ curl -X POST http://192.168.1.186:8090/api/devices/<DEV_EUI>/keys \
 
 **Consultar device:**
 ```bash
-curl -s http://192.168.1.186:8090/api/devices/<DEV_EUI> \
+curl -s http://<LORACORE_HOST>:8090/api/devices/<DEV_EUI> \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>"
 ```
 
 **Remover device:**
 ```bash
-curl -X DELETE http://192.168.1.186:8090/api/devices/<DEV_EUI> \
+curl -X DELETE http://<LORACORE_HOST>:8090/api/devices/<DEV_EUI> \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>"
 ```
 
 **Enfileirar downlink:**
 ```bash
-curl -X POST http://192.168.1.186:8090/api/devices/<DEV_EUI>/queue \
+curl -X POST http://<LORACORE_HOST>:8090/api/devices/<DEV_EUI>/queue \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -297,7 +299,7 @@ curl -X POST http://192.168.1.186:8090/api/devices/<DEV_EUI>/queue \
 
 **Listar fila de downlinks:**
 ```bash
-curl -s http://192.168.1.186:8090/api/devices/<DEV_EUI>/queue \
+curl -s http://<LORACORE_HOST>:8090/api/devices/<DEV_EUI>/queue \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>"
 ```
 
@@ -305,11 +307,11 @@ curl -s http://192.168.1.186:8090/api/devices/<DEV_EUI>/queue \
 
 ```bash
 # Listar
-curl -s http://192.168.1.186:8090/api/applications?limit=100&tenantId=<TENANT_ID> \
+curl -s http://<LORACORE_HOST>:8090/api/applications?limit=100&tenantId=<TENANT_ID> \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>"
 
 # Criar
-curl -X POST http://192.168.1.186:8090/api/applications \
+curl -X POST http://<LORACORE_HOST>:8090/api/applications \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -324,7 +326,7 @@ curl -X POST http://192.168.1.186:8090/api/applications \
 
 ```bash
 # Listar
-curl -s http://192.168.1.186:8090/api/device-profiles?limit=100&tenantId=<TENANT_ID> \
+curl -s http://<LORACORE_HOST>:8090/api/device-profiles?limit=100&tenantId=<TENANT_ID> \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>"
 ```
 
@@ -332,7 +334,7 @@ curl -s http://192.168.1.186:8090/api/device-profiles?limit=100&tenantId=<TENANT
 
 ```bash
 # Listar
-curl -s http://192.168.1.186:8090/api/gateways?limit=100&tenantId=<TENANT_ID> \
+curl -s http://<LORACORE_HOST>:8090/api/gateways?limit=100&tenantId=<TENANT_ID> \
   -H "Grpc-Metadata-Authorization: Bearer <TOKEN>"
 ```
 
@@ -346,7 +348,7 @@ O ChirpStack v4 expoe uma API gRPC na mesma porta da web UI (8080). Para backend
 
 | Parametro | Valor |
 |-----------|-------|
-| Host | `192.168.1.186` (ou hostname do RPi) |
+| Host | `<LORACORE_HOST>` (ou hostname do RPi) |
 | Porta | `8080` (mesma da web UI — gRPC e HTTP/2 compartilham) |
 | Protocolo | gRPC sobre HTTP/2 (insecure em rede local) |
 | Pacote Python | `chirpstack-api` (`pip install chirpstack-api grpcio`) |
@@ -360,7 +362,7 @@ Exemplo completo e funcional para enviar um downlink a um device:
 import grpc
 from chirpstack_api import api as chirpstack_api
 
-CHIRPSTACK_GRPC = "192.168.1.186:8080"
+CHIRPSTACK_GRPC = "<LORACORE_HOST>:8080"
 API_TOKEN = "<SEU_TOKEN>"
 
 # Abrir canal gRPC (insecure para rede local)
@@ -389,7 +391,7 @@ channel.close()
 
 **Gerar API token**:
 ```bash
-ssh marlon@192.168.1.186 "sudo chirpstack -c /etc/chirpstack create-api-key --name meu-backend"
+ssh <USER>@<LORACORE_HOST> "sudo chirpstack -c /etc/chirpstack create-api-key --name meu-backend"
 ```
 
 ### 4.3 Variante Assincrona (para backends de producao)
@@ -400,7 +402,7 @@ Para backends baseados em asyncio (FastAPI, aiohttp):
 import grpc.aio
 from chirpstack_api import api as chirpstack_api
 
-CHIRPSTACK_GRPC = "192.168.1.186:8080"
+CHIRPSTACK_GRPC = "<LORACORE_HOST>:8080"
 API_TOKEN = "<SEU_TOKEN>"
 
 async def enqueue_downlink(dev_eui: str, f_port: int, data: bytes, confirmed: bool = False):
@@ -460,7 +462,7 @@ for item in queue.result:
 import json
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.1.186"
+BROKER = "<LORACORE_HOST>"
 PORT = 1883
 TOPIC = "application/+/device/+/event/up"
 
@@ -497,7 +499,7 @@ client.loop_forever()
 #!/bin/bash
 # Registrar um novo device e monitorar uplinks
 
-API="http://192.168.1.186:8090/api"
+API="http://<LORACORE_HOST>:8090/api"
 TOKEN="<SEU_TOKEN>"
 AUTH="Grpc-Metadata-Authorization: Bearer $TOKEN"
 
@@ -524,7 +526,7 @@ curl -s -X POST "$API/devices/$DEV_EUI/keys" \
 echo ""
 echo "Device registrado. Grave estas credenciais no firmware."
 echo "Monitorando uplinks..."
-mosquitto_sub -h 192.168.1.186 -t "application/+/device/$DEV_EUI/event/up" -v
+mosquitto_sub -h <LORACORE_HOST> -t "application/+/device/$DEV_EUI/event/up" -v
 ```
 
 ### 5.3 Padrao de Integracao para Backend (FastAPI)
@@ -554,7 +556,7 @@ def on_message(client, userdata, msg):
 def mqtt_thread():
     client = mqtt.Client(client_id="fastapi-backend", clean_session=False)
     client.on_message = on_message
-    client.connect("192.168.1.186", 1883, keepalive=60)
+    client.connect("<LORACORE_HOST>", 1883, keepalive=60)
     client.subscribe("application/+/device/+/event/up", qos=1)
     client.loop_forever()
 

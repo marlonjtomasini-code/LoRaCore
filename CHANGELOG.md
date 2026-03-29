@@ -20,7 +20,14 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 - Estrutura `.github/` com templates de issues, PR e CI/CD
 - Arquivos padrao: README.md, LICENSE (MIT), CONTRIBUTING.md, SECURITY.md, CHANGELOG.md, .editorconfig
 
+### Corrigido
+- Codec error handling: retorno de `{ errors: [...] }` em vez de `{ data: {} }` para payloads invalidos — erros agora visiveis no ChirpStack Web UI e MQTT
+
 ### Alterado
+- Documentacao publica generalizada: IPs, usuarios e credenciais hardcoded substituidos por placeholders (`<LORACORE_HOST>`, `<USER>`, etc.)
+- IP da RPi5 atualizado de 192.168.1.129 para 192.168.1.186 em documentacao e templates
+- Tarefas concluidas (TASK-0001, 0002, 0004) arquivadas; TASK-0003 marcada como bloqueada
+- CLAUDE.md, README.md e docs/README.md atualizados com arquivos ausentes (GUIA_CONSUMIDOR, RELATORIO_STRESS_TEST_V2)
 - Firmware CubeCell movido para `examples/firmware/cubecell-otaa-test/` (reclassificado como codigo de teste)
 - Documentacao canonica movida para `docs/`
 - `.gitignore` expandido para PlatformIO e IDEs

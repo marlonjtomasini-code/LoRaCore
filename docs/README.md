@@ -8,6 +8,7 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 |-----------|-----------|
 | [DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md) | Referencia autoritativa da infraestrutura — 22 secoes cobrindo todo o stack, da camada fisica ao monitoramento |
 | [RELATORIO_STRESS_TEST.md](RELATORIO_STRESS_TEST.md) | Validacao de performance sob carga extrema (CPU 100%, memoria saturada, I/O intenso) |
+| [RELATORIO_STRESS_TEST_V2.md](RELATORIO_STRESS_TEST_V2.md) | Validacao do MQTT Forwarder (Rust) sob carga progressiva (6 fases, 79% entrega sob stress total) |
 
 ## Guias Praticos
 

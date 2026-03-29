@@ -29,15 +29,18 @@
 //
 // retorno esperado:
 //   { data: { campo1: valor1, campo2: valor2, ... } }
+//   ou, em caso de erro:
+//   { errors: ["descricao do erro"] }
 //
 // O objeto "data" aparece no campo "object" do JSON MQTT e na web UI.
+// Erros em "errors" aparecem no evento "error" do MQTT e na web UI.
 // ---------------------------------------------------------------------------
 function decodeUplink(input) {
   var bytes = input.bytes;
 
   // TODO: validar tamanho minimo do payload
   if (bytes.length < 1) {
-    return { data: {} };
+    return { errors: ["payload too short: expected 1+ bytes, got " + bytes.length] };
   }
 
   // TODO: extrair campos do payload
@@ -99,7 +102,7 @@ function decodeDownlink(input) {
   var bytes = input.bytes;
 
   if (bytes.length < 1) {
-    return { data: {} };
+    return { errors: ["downlink payload too short: expected 1+ bytes, got " + bytes.length] };
   }
 
   // TODO: decodificar payload de downlink (inverso do encodeDownlink)
