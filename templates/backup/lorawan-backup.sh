@@ -88,7 +88,7 @@ fi
 
 log "Fase 2: Dump do PostgreSQL (${PG_DATABASE})..."
 
-if sudo -u postgres pg_dump -Fc -d "$PG_DATABASE" -f "$PG_DUMP" 2>> "$LOG_FILE"; then
+if sudo -u postgres pg_dump -Fc -d "$PG_DATABASE" > "$PG_DUMP" 2>> "$LOG_FILE"; then
     PG_SIZE=$(du -h "$PG_DUMP" | cut -f1)
     log "Fase 2: PostgreSQL dump concluido (${PG_SIZE})"
 else
@@ -105,13 +105,13 @@ log "Fase 3: Snapshot do Redis..."
 REDIS_SRC="/var/lib/redis/dump.rdb"
 
 # Capturar timestamp do ultimo save antes do BGSAVE
-LASTSAVE_BEFORE=$(redis-cli LASTSAVE 2>/dev/null | awk '{print $2}')
+LASTSAVE_BEFORE=$(redis-cli LASTSAVE 2>/dev/null)
 
 if redis-cli BGSAVE >> "$LOG_FILE" 2>&1; then
     # Aguardar BGSAVE concluir (max 30 segundos)
     WAITED=0
     while [ "$WAITED" -lt 30 ]; do
-        LASTSAVE_AFTER=$(redis-cli LASTSAVE 2>/dev/null | awk '{print $2}')
+        LASTSAVE_AFTER=$(redis-cli LASTSAVE 2>/dev/null)
         if [ "$LASTSAVE_AFTER" != "$LASTSAVE_BEFORE" ]; then
             break
         fi
