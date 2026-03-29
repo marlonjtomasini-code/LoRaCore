@@ -1,12 +1,13 @@
 ---
 id: TASK-2026-0009
 title: Documentacao de seguranca expandida e ADR confirmed mode
-status: pending
-phase: analise
+status: done
+phase: concluido
 severity: S3
 owner: coordenador
 created: 2026-03-29
 updated: 2026-03-29
+closed: 2026-03-29
 depends_on: []
 blocked_by: []
 parent: ~
@@ -40,19 +41,13 @@ tags:
 
 ## Retomada
 
-ESTADO: aguardando_execucao
+ESTADO: concluido
 AGENTE: coordenador
-PROXIMA: ler SECURITY.md atual, mosquitto.conf, e stress test v3 para dados quantitativos
-LER:
-- SECURITY.md
-- templates/mosquitto/mosquitto.conf
-- docs/RELATORIO_STRESS_TEST_V3.md (secao de resultados confirmed vs unconfirmed)
-DECIDIDO:
-- MQTT ACLs: allow_anonymous=true e decisao consciente para rede isolada, documentar explicitamente
-- password_auth.conf: template opcional para redes nao-isoladas
-- confirmed mode: limitacao arquitetural, nao bug — documentar como ADR
-PENDENTE:
-- nenhuma
+RESULTADO:
+- SECURITY.md expandido: topologia de rede, decisao MQTT ACLs, SSH hardening, rotacao tokens
+- templates/mosquitto/password_auth.conf criado como template opcional
+- ADR-0005: confirmed uplinks degradam sob stress (11% vs 85%)
+- docs/README.md e templates/README.md atualizados
 
 ## Analise Preliminar
 
@@ -90,9 +85,9 @@ Duas lacunas distintas agrupadas por serem ambas de documentacao e baixo esforco
 
 ## Checklist
 
-- [ ] Ler SECURITY.md atual
-- [ ] Ler config do Mosquitto para entender postura atual
-- [ ] Ler stress test v3 para dados de confirmed vs unconfirmed
-- [ ] Expandir SECURITY.md (topologia, ACLs, SSH, tokens)
-- [ ] Criar templates/mosquitto/password_auth.conf
-- [ ] Criar docs/adr/ADR-0005-confirmed-uplink-degradacao-sob-stress.md
+- [x] Ler SECURITY.md atual
+- [x] Ler config do Mosquitto para entender postura atual
+- [x] Ler stress test v3 para dados de confirmed vs unconfirmed
+- [x] Expandir SECURITY.md (topologia, ACLs, SSH, tokens)
+- [x] Criar templates/mosquitto/password_auth.conf
+- [x] Criar docs/adr/ADR-0005-confirmed-uplink-degradacao-sob-stress.md

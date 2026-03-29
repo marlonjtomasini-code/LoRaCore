@@ -28,7 +28,8 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 | `chirpstack/` | `region_us915_0.toml` | Configuracao de regiao US915 + MQTT gateway |
 | `chirpstack/device-profiles/` | `class-a-sensor-otaa.json` | Device profile — sensor Class A OTAA |
 | `chirpstack/device-profiles/` | `class-c-actuator-otaa.json` | Device profile — atuador Class C OTAA |
-| `mosquitto/` | `production.conf` | Mosquitto — broker MQTT de producao |
+| `mosquitto/` | `production.conf` | Mosquitto — broker MQTT de producao (allow_anonymous) |
+| `mosquitto/` | `password_auth.conf` | Mosquitto — autenticacao por senha (redes nao-isoladas) |
 | `systemd/` | `lora-pkt-fwd.service` | Unit file do packet forwarder |
 | `systemd/` | `chirpstack-mqtt-fwd-priority.conf` | Override de prioridade CPU para MQTT forwarder |
 | `systemd/` | `chirpstack-priority.conf` | Override de prioridade CPU para ChirpStack |

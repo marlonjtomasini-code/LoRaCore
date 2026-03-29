@@ -40,6 +40,7 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 | [ADR-0002](adr/ADR-0002-us915-subband-1.md) | US915 Sub-band 1 |
 | [ADR-0003](adr/ADR-0003-mqtt-como-camada-de-integracao.md) | MQTT como camada de integracao |
 | [ADR-0004](adr/ADR-0004-observabilidade-scripts-vs-prometheus.md) | Observabilidade via scripts shell vs Prometheus/Grafana |
+| [ADR-0005](adr/ADR-0005-confirmed-uplink-degradacao-sob-stress.md) | Confirmed uplinks degradam sob stress — usar unconfirmed para telemetria |
 
 ## Gestao de Tarefas
 
