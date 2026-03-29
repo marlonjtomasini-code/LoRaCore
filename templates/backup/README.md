@@ -23,8 +23,8 @@ Backup diario automatizado da infraestrutura LoRaWAN com sync remoto para Google
 
 | Placeholder | Descricao | Exemplo |
 |-------------|-----------|---------|
-| `<USER>` | Usuario do sistema | `marlon` |
-| `<BACKUP_DIR>` | Diretorio de backup local | `/home/marlon/backups` |
+| `<USER>` | Usuario do sistema | `seuusuario` |
+| `<BACKUP_DIR>` | Diretorio de backup local | `/home/seuusuario/backups` |
 | `<RCLONE_REMOTE>` | Nome do remote rclone | `gdrive` |
 | `<REMOTE_DIR>` | Pasta no Google Drive | `LoRaCore-backups` |
 | `<PG_DATABASE>` | Banco PostgreSQL | `chirpstack` |
@@ -104,8 +104,8 @@ cp templates/backup/lorawan-backup.sh ~/lorawan-backup.sh
 chmod +x ~/lorawan-backup.sh
 
 # Editar e substituir placeholders:
-#   <USER>           -> marlon
-#   <BACKUP_DIR>     -> /home/marlon/backups
+#   <USER>           -> seuusuario
+#   <BACKUP_DIR>     -> /home/seuusuario/backups
 #   <RCLONE_REMOTE>  -> gdrive
 #   <REMOTE_DIR>     -> LoRaCore-backups
 #   <PG_DATABASE>    -> chirpstack

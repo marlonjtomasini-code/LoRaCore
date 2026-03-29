@@ -30,6 +30,13 @@ Exemplo: `feat: adicionar template de device profile Class B`
 - **Firmware de teste:** deve compilar com `pio run` sem erros
 - **Documentacao:** toda mudanca de comportamento deve atualizar a documentacao correspondente (docs-as-code)
 
+## Contrato de Interface
+
+Mudancas que afetam o formato de dados consumidos por projetos externos (payloads MQTT, respostas REST/gRPC, campos de codecs) devem:
+
+1. Ser registradas no [CHANGELOG.md](CHANGELOG.md) como **breaking change**
+2. Atualizar a secao "Versionamento de Schema" em [REFERENCIA_INTEGRACAO.md](docs/REFERENCIA_INTEGRACAO.md)
+
 ## TDD para Embedded
 
 Firmwares de teste seguem a metodologia TDD por fases descrita no [CLAUDE.md](CLAUDE.md). Cada fase aborda uma unica preocupacao e tem gate de verificacao obrigatorio.

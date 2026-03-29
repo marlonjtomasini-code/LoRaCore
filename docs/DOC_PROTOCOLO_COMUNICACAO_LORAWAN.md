@@ -317,13 +317,13 @@ After=local-fs.target
 Type=simple
 StandardOutput=journal
 StandardError=journal
-WorkingDirectory=/home/marlon/packet_forwarder
+WorkingDirectory=<PKT_FWD_DIR>
 ExecStartPre=/bin/sh -c "test -e /dev/ttyACM0"
-ExecStart=/home/marlon/packet_forwarder/lora_pkt_fwd
+ExecStart=<PKT_FWD_DIR>/lora_pkt_fwd
 Restart=always
 RestartSec=5
 WatchdogSec=120
-User=marlon
+User=<USER>
 
 [Install]
 WantedBy=multi-user.target
@@ -1050,9 +1050,12 @@ IOWeight=250
 
 ## 17. Monitoramento, Watchdog e Backup
 
+> **Nota:** Substitua os placeholders abaixo pelos valores da sua instalacao:
+> `<USER>` = usuario do sistema, `<BACKUP_DIR>` = diretorio de backups (ex: `/home/seuusuario/backups`)
+
 ### 17.1 Health Check (cron a cada 5 minutos)
 
-Script: `/home/marlon/health_check.sh`
+Script: `/home/<USER>/health_check.sh`
 
 Verifica:
 - Status dos 7 servicos systemd
@@ -1064,34 +1067,34 @@ Log: `/var/log/lorawan-health.log`
 
 ```bash
 # Crontab do usuario marlon
-*/5 * * * * /bin/bash /home/marlon/health_check.sh
+*/5 * * * * /bin/bash /home/<USER>/health_check.sh
 ```
 
 ### 17.2 Watchdog do Concentrador (cron a cada 2 minutos)
 
-Script: `/home/marlon/watchdog_concentrator.sh`
+Script: `/home/<USER>/watchdog_concentrator.sh`
 
 Verifica se houve atividade (`PULL_ACK`) do concentrador nos ultimos 90 segundos. Se nao, reinicia o servico `lora-pkt-fwd` e registra no log.
 
 ```bash
 # Crontab do root
-*/2 * * * * /bin/bash /home/marlon/watchdog_concentrator.sh
+*/2 * * * * /bin/bash /home/<USER>/watchdog_concentrator.sh
 ```
 
 ### 17.3 Monitor de Devices Offline (cron a cada 3 minutos)
 
-Script: `/home/marlon/device_monitor.sh`
+Script: `/home/<USER>/device_monitor.sh`
 
 Consulta a API REST do ChirpStack, verifica `lastSeenAt` de todos os devices registrados. Se um device nao reportou em mais de 180 segundos, registra `ALERT OFFLINE <nome> <dev_eui>` no log.
 
 ```bash
 # Crontab do root
-*/3 * * * * /bin/bash /home/marlon/device_monitor.sh
+*/3 * * * * /bin/bash /home/<USER>/device_monitor.sh
 ```
 
 ### 17.4 Backup Diario (cron as 3h)
 
-Script: `/home/marlon/lorawan-backup.sh`
+Script: `/home/<USER>/lorawan-backup.sh`
 Template: `templates/backup/lorawan-backup.sh`
 
 Conteudo do backup:
@@ -1099,7 +1102,7 @@ Conteudo do backup:
 - `redis_YYYYMMDD.rdb` - Snapshot do Redis (BGSAVE + copy)
 - `configs_YYYYMMDD.tar.gz` - Todos os arquivos de configuracao + crontabs
 
-Diretorio local: `/home/marlon/backups/`
+Diretorio local: `<BACKUP_DIR>`
 Diretorio remoto: Google Drive via rclone (`gdrive:LoRaCore-backups/`)
 Retencao: 30 dias (local e remoto)
 
@@ -1107,7 +1110,7 @@ O script executa em fases independentes — falha em uma fase nao aborta as dema
 
 ```bash
 # Crontab do root
-0 3 * * * /bin/bash /home/marlon/lorawan-backup.sh
+0 3 * * * /bin/bash /home/<USER>/lorawan-backup.sh
 ```
 
 Para setup completo (rclone, Google Drive, cron): ver `templates/backup/README.md`.
@@ -1116,14 +1119,14 @@ Para setup completo (rclone, Google Drive, cron): ver `templates/backup/README.m
 
 | Script | Frequencia | Usuario | Funcao |
 |---|---|---|---|
-| `health_check.sh` | A cada 5 min | marlon | Servicos, memoria, disco, gateway |
+| `health_check.sh` | A cada 5 min | `<USER>` | Servicos, memoria, disco, gateway |
 | `watchdog_concentrator.sh` | A cada 2 min | root | Auto-recovery do concentrador |
 | `device_monitor.sh` | A cada 3 min | root | Alerta de devices offline |
 | `lorawan-backup.sh` | Diario 3h | root | Backup PostgreSQL + Redis + configs + sync Google Drive |
 
 ### 17.6 Restauracao de Backup
 
-Script guiado: `/home/marlon/lorawan-restore.sh`
+Script guiado: `/home/<USER>/lorawan-restore.sh`
 Template: `templates/backup/lorawan-restore.sh`
 
 ```bash
@@ -1141,16 +1144,16 @@ O script e interativo — pede confirmacao antes de cada passo destrutivo (Postg
 
 ```bash
 # PostgreSQL
-sudo -u postgres pg_restore -d chirpstack -c --if-exists /home/marlon/backups/chirpstack_YYYYMMDD.dump
+sudo -u postgres pg_restore -d chirpstack -c --if-exists <BACKUP_DIR>/chirpstack_YYYYMMDD.dump
 
 # Redis
 sudo systemctl stop redis-server
-sudo cp /home/marlon/backups/redis_YYYYMMDD.rdb /var/lib/redis/dump.rdb
+sudo cp <BACKUP_DIR>/redis_YYYYMMDD.rdb /var/lib/redis/dump.rdb
 sudo chown redis:redis /var/lib/redis/dump.rdb
 sudo systemctl start redis-server
 
 # Configs
-sudo tar xzf /home/marlon/backups/configs_YYYYMMDD.tar.gz -C /
+sudo tar xzf <BACKUP_DIR>/configs_YYYYMMDD.tar.gz -C /
 sudo systemctl daemon-reload
 sudo systemctl restart chirpstack chirpstack-mqtt-forwarder mosquitto redis-server lora-pkt-fwd
 ```

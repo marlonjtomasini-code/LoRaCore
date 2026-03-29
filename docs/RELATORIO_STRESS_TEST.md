@@ -147,7 +147,7 @@ O cenario de stress testado (CPU 100% + 1GB VM + I/O saturado) e **extremamente 
 
 Localizacao na Raspberry Pi:
 ```
-/home/marlon/stress_results/
+/home/<USER>/stress_results/
   system_metrics.csv        # Metricas do sistema a cada 5s (55 amostras)
   pktfwd_log.txt           # Logs do packet forwarder durante stress
   gw_bridge_log.txt        # Logs do gateway bridge durante stress

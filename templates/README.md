@@ -14,8 +14,8 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 |-------------|-----------|---------|
 | `<GATEWAY_ID>` | EUI do gateway (16 hex) | `2CCF67FFFE576A1D` |
 | `<SECRET>` | Chave secreta da API | Gerar com `openssl rand -base64 32` |
-| `<USER>` | Usuario do sistema | `marlon` |
-| `<PKT_FWD_PATH>` | Path do packet forwarder | `/home/marlon/packet_forwarder` |
+| `<USER>` | Usuario do sistema | `seuusuario` |
+| `<PKT_FWD_PATH>` | Path do packet forwarder | `/home/seuusuario/packet_forwarder` |
 
 ## Indice de Templates
 

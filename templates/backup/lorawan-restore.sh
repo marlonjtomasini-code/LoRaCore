@@ -4,8 +4,8 @@
 # Destino: /home/<USER>/lorawan-restore.sh
 #
 # Substituir:
-#   <USER>             — usuario do sistema (ex: marlon)
-#   <BACKUP_DIR>       — diretorio de backup local (ex: /home/marlon/backups)
+#   <USER>             — usuario do sistema (ex: seuusuario)
+#   <BACKUP_DIR>       — diretorio de backup local (ex: /home/seuusuario/backups)
 #   <RCLONE_REMOTE>    — nome do remote rclone (ex: gdrive)
 #   <REMOTE_DIR>       — pasta no Google Drive (ex: LoRaCore-backups)
 #   <PG_DATABASE>      — nome do banco PostgreSQL (ex: chirpstack)

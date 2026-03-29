@@ -183,7 +183,7 @@ O ADR-0001 (`docs/adr/ADR-0001-mqtt-forwarder-rust-vs-gateway-bridge-go.md`) doc
 
 Localizacao na Raspberry Pi:
 ```
-/home/marlon/stress_results_v2/
+/home/<USER>/stress_results_v2/
   system_metrics.csv        # 78 amostras a cada 5s (16 colunas)
   mqtt_uplinks.txt          # Uplinks capturados via MQTT (142 mensagens)
   chirpstack_log.txt        # 3437 linhas de log do ChirpStack
@@ -203,5 +203,5 @@ examples/firmware/cubecell-otaa-test/
 
 ```bash
 # Executado na RPi via SSH
-bash /home/marlon/stress_test_v2.sh
+bash /home/<USER>/stress_test_v2.sh
 ```

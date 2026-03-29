@@ -1,0 +1,107 @@
+name: Validate Core
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'templates/**'
+      - 'docs/**'
+  pull_request:
+    paths:
+      - 'templates/**'
+      - 'docs/**'
+
+jobs:
+  lint-codecs:
+    name: Lint Codecs (JavaScript)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar sintaxe dos codecs
+        run: |
+          errors=0
+          for f in templates/codecs/*.js; do
+            if ! node --check "$f" 2>&1; then
+              echo "ERRO: $f"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "::error::$errors codec(s) com erro de sintaxe"
+            exit 1
+          fi
+          echo "Todos os codecs validados com sucesso"
+
+  validate-templates:
+    name: Validate Templates (JSON/TOML)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verificar JSON
+        run: |
+          errors=0
+          for f in $(find templates -name '*.json' -type f); do
+            if ! python3 -m json.tool "$f" > /dev/null 2>&1; then
+              echo "ERRO JSON invalido: $f"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "::error::$errors arquivo(s) JSON invalido(s)"
+            exit 1
+          fi
+          echo "Todos os JSONs validados"
+
+      - name: Verificar TOML
+        run: |
+          errors=0
+          for f in $(find templates -name '*.toml' -type f); do
+            if ! python3 -c "import tomllib; open('$f','rb').read()" 2>&1 && \
+               ! python3 -c "import tomllib; tomllib.load(open('$f','rb'))" 2>&1; then
+              echo "ERRO TOML invalido: $f"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "::error::$errors arquivo(s) TOML invalido(s)"
+            exit 1
+          fi
+          echo "Todos os TOMLs validados"
+
+  no-hardcodes:
+    name: Detect Hardcoded Values
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar paths hardcoded em docs e templates
+        run: |
+          # Patterns proibidos (exceto CLAUDE.md que e interno do agente)
+          patterns=(
+            '/home/marlon/'
+            '192\.168\.1\.[0-9]+'
+          )
+          # Arquivos permitidos (nao sao consumidos por projetos externos)
+          exclude="--exclude=CLAUDE.md --exclude-dir=.git --exclude-dir=archive"
+
+          errors=0
+          for pattern in "${patterns[@]}"; do
+            matches=$(grep -rn -E "$pattern" docs/ templates/ $exclude 2>/dev/null || true)
+            if [ -n "$matches" ]; then
+              echo "::warning::Pattern proibido encontrado: $pattern"
+              echo "$matches"
+              errors=$((errors + 1))
+            fi
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo "::error::Valores hardcoded detectados em docs/ ou templates/. Use placeholders (<USER>, <LORACORE_HOST>, etc.)"
+            exit 1
+          fi
+          echo "Nenhum valor hardcoded encontrado"

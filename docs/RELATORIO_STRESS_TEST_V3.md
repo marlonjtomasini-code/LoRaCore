@@ -157,7 +157,7 @@ Com TX interval de 30s (padrao producao):
 
 Localizacao na Raspberry Pi:
 ```
-/home/marlon/stress_v3_results/
+/home/<USER>/stress_v3_results/
   baseline_mqtt.log       # Uplinks MQTT coletados durante baseline
   baseline_metrics.csv    # Metricas do sistema a cada 5s (baseline)
   stress_mqtt.log         # Uplinks MQTT coletados durante stress

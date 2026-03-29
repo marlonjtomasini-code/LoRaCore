@@ -577,6 +577,30 @@ def get_device(dev_eui: str):
 
 ---
 
+## Versionamento de Schema
+
+Os payloads MQTT e respostas REST seguem o formato definido pelo **ChirpStack v4.17.0**. Mudancas no formato podem ocorrer quando:
+
+1. O ChirpStack for atualizado para uma versao major
+2. Um codec for alterado (campos adicionados/removidos no `decodeUplink`)
+
+### Contrato de estabilidade
+
+- **Topics MQTT** (`application/+/device/+/event/up`, etc.) seguem a convencao ChirpStack v4 e nao serao alterados pelo LoRaCore
+- **Campos do payload MQTT** (`deviceInfo`, `fPort`, `data`, `object`, `rxInfo`, `txInfo`) sao garantidos enquanto a versao do ChirpStack permanecer na v4.x
+- **Campos dentro de `object`** dependem do codec de cada device — sao responsabilidade do projeto consumidor
+- Qualquer mudanca que afete o formato dos dados MQTT ou REST sera registrada no [CHANGELOG.md](../CHANGELOG.md) como **breaking change**
+
+### Versao atual
+
+| Interface | Versao base | Referencia |
+|-----------|-------------|------------|
+| MQTT payload | ChirpStack v4.17.0 | Secoes 2 e 3 deste documento |
+| REST API | ChirpStack v4.17.0 | Secao 4 deste documento |
+| gRPC API | ChirpStack v4.17.0 | Secao 5 deste documento |
+
+---
+
 ## Ver Tambem
 
 - [DOC_PROTOCOLO Secao 14](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md#14-topicos-mqtt-e-integracao-de-dados) — Topicos MQTT e formato de payload

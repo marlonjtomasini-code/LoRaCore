@@ -3,8 +3,8 @@
 # Destino: /etc/systemd/system/lora-pkt-fwd.service
 #
 # Substituir:
-#   <USER>          — usuario do sistema (ex: marlon)
-#   <PKT_FWD_PATH>  — diretorio do packet forwarder (ex: /home/marlon/packet_forwarder)
+#   <USER>          — usuario do sistema (ex: seuusuario)
+#   <PKT_FWD_PATH>  — diretorio do packet forwarder (ex: /home/seuusuario/packet_forwarder)
 
 [Unit]
 Description=LoRa Packet Forwarder (RAK2287 USB)
