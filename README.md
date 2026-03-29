@@ -89,6 +89,7 @@ LoRaCore/
 - [Guia do Consumidor](docs/GUIA_CONSUMIDOR.md) — como adotar o LoRaCore no seu projeto
 - [Relatorio de stress test](docs/RELATORIO_STRESS_TEST.md) — performance sob carga extrema
 - [Relatorio de stress test v2](docs/RELATORIO_STRESS_TEST_V2.md) — validacao do MQTT Forwarder (Rust) sob carga progressiva
+- [Relatorio de stress test v3](docs/RELATORIO_STRESS_TEST_V3.md) — 2 devices simultaneos sob carga extrema
 - [Decisoes arquiteturais](docs/adr/) — ADRs com justificativas tecnicas
 - [Indice de templates](templates/README.md) — configuracoes reutilizaveis
 - [Exemplos](examples/README.md) — firmwares de teste e validacao

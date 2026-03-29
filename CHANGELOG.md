@@ -8,6 +8,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
 ### Adicionado
 - Relatorio de stress test v2 (`docs/RELATORIO_STRESS_TEST_V2.md`): validacao do MQTT Forwarder (Rust) sob 6 fases de carga progressiva — entrega de 79% sob stress total vs 0% com Gateway Bridge (Go)
+- Relatorio de stress test v3 (`docs/RELATORIO_STRESS_TEST_V3.md`): validacao de 2 devices simultaneos sob carga extrema — D1 delivery 85%, D2 delivery 11%
 - Systemd overrides para chirpstack e mosquitto (`templates/systemd/chirpstack-priority.conf`, `mosquitto-priority.conf`): CPUWeight, Nice, MemoryHigh/MemoryMax
 - Limites de memoria (MemoryHigh/MemoryMax) adicionados a todos os servicos criticos via systemd
 - Sysctl tuning para durabilidade do microSD: vm.swappiness=10, vm.dirty_ratio=10, vm.dirty_background_ratio=5
