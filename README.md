@@ -42,6 +42,8 @@ LoRaCore/
 ├── docs/                    # Documentacao core
 │   ├── DOC_PROTOCOLO_*.md   # Referencia canonica da infraestrutura (22 secoes)
 │   ├── RELATORIO_*.md       # Validacao de performance sob carga
+│   ├── adr/                 # Decisoes arquiteturais (ADR-0001 a 0005)
+│   ├── runbooks/            # Procedimentos operacionais (5 cenarios)
 │   └── operations/tasks/    # Sistema de gestao de tarefas
 ├── templates/               # Configuracoes reutilizaveis
 │   ├── packet-forwarder/    # SX1302 US915 sub-band 1
@@ -51,8 +53,10 @@ LoRaCore/
 │   ├── systemd/             # Unit files e overrides de prioridade
 │   ├── sysctl/              # Tuning de buffers UDP
 │   ├── udev/                # I/O scheduler
-│   ├── codecs/              # Decoders/encoders JavaScript para ChirpStack
-│   └── backup/              # Backup diario + restore (Google Drive via rclone)
+│   ├── codecs/              # Decoders/encoders JS + testes automatizados
+│   ├── backup/              # Backup diario + restore (Google Drive via rclone)
+│   ├── monitoring/          # Health check, watchdog, device monitor, daily report
+│   └── deploy/              # Setup automatizado (13 fases, idempotente)
 ├── examples/                # Codigo de teste e referencia (NAO e core)
 │   └── firmware/            # Firmwares de validacao
 └── .github/                 # Templates e CI/CD
@@ -90,8 +94,11 @@ LoRaCore/
 - [Relatorio de stress test](docs/RELATORIO_STRESS_TEST.md) — performance sob carga extrema
 - [Relatorio de stress test v2](docs/RELATORIO_STRESS_TEST_V2.md) — validacao do MQTT Forwarder (Rust) sob carga progressiva
 - [Relatorio de stress test v3](docs/RELATORIO_STRESS_TEST_V3.md) — 2 devices simultaneos sob carga extrema
-- [Decisoes arquiteturais](docs/adr/) — ADRs com justificativas tecnicas
+- [Runbooks operacionais](docs/runbooks/) — procedimentos passo-a-passo para incidentes de producao
+- [Decisoes arquiteturais](docs/adr/) — ADRs com justificativas tecnicas (5 decisoes)
 - [Indice de templates](templates/README.md) — configuracoes reutilizaveis
+- [Monitoramento](templates/monitoring/README.md) — health check, watchdog, device monitor, daily report
+- [Deploy automatizado](templates/deploy/README.md) — instalacao completa em 13 fases
 - [Exemplos](examples/README.md) — firmwares de teste e validacao
 
 ## Versionamento

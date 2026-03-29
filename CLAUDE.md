@@ -97,7 +97,16 @@ LoRaCore/
 │   ├── adr/                                     # Architecture Decision Records
 │   │   ├── ADR-0001-mqtt-forwarder-rust-vs-gateway-bridge-go.md
 │   │   ├── ADR-0002-us915-subband-1.md
-│   │   └── ADR-0003-mqtt-como-camada-de-integracao.md
+│   │   ├── ADR-0003-mqtt-como-camada-de-integracao.md
+│   │   ├── ADR-0004-observabilidade-scripts-vs-prometheus.md
+│   │   └── ADR-0005-confirmed-uplink-degradacao-sob-stress.md
+│   ├── runbooks/                                # Procedimentos operacionais (5 cenarios)
+│   │   ├── README.md                            # Indice com triggers e ordem de restart
+│   │   ├── RUNBOOK-001-service-failure.md       # Servico systemd inativo
+│   │   ├── RUNBOOK-002-sd-card-failure.md       # Falha de microSD
+│   │   ├── RUNBOOK-003-gateway-not-receiving.md # Gateway sem uplinks
+│   │   ├── RUNBOOK-004-backup-failure.md        # Falha no backup diario
+│   │   └── RUNBOOK-005-device-offline.md        # Device offline
 │   └── operations/tasks/                        # Sistema de gestao de tarefas
 │       ├── README.md                            # Workflow do backlog
 │       ├── index.md                             # Indice de tarefas
@@ -116,7 +125,9 @@ LoRaCore/
 │   ├── sysctl/                                  # Tuning de buffers UDP
 │   ├── udev/                                    # I/O scheduler
 │   ├── codecs/                                  # Decoders/encoders JS para ChirpStack
-│   └── backup/                                  # Backup diario + restore (Google Drive)
+│   ├── backup/                                  # Backup diario + restore (Google Drive)
+│   ├── monitoring/                              # Health check, watchdog, device monitor, daily report
+│   └── deploy/                                  # Setup automatizado (13 fases, idempotente)
 ├── examples/                                    # Codigo de teste/referencia (NAO e core)
 │   ├── README.md                                # Explica que examples != core
 │   └── firmware/                                # Firmwares de validacao

@@ -4,6 +4,26 @@ Todas as mudancas relevantes do projeto sao documentadas neste arquivo.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [Nao publicado]
+
+### Adicionado
+- Templates de monitoramento (`templates/monitoring/`): health check, watchdog do concentrador, monitor de devices offline, relatorio diario, logrotate
+- Script de deploy automatizado (`templates/deploy/setup-loracore.sh`): instalacao completa em 13 fases, interativo, idempotente
+- Testes automatizados de codecs (`templates/codecs/tests/`): 5 testes standalone com Node.js assert, validacao de decode/encode/roundtrip
+- Runbooks operacionais (`docs/runbooks/`): 5 cenarios — service failure, SD card, gateway, backup, device offline
+- ADR-0004: Observabilidade via scripts shell vs Prometheus/Grafana
+- ADR-0005: Confirmed uplinks degradam sob stress — usar unconfirmed para telemetria
+- Template de autenticacao MQTT (`templates/mosquitto/password_auth.conf`) para redes nao-isoladas
+- Job `test-codecs` no CI (`validate-core.yml`)
+- Release engineering: tags v0.1.0 e v0.2.0, GitHub Releases, secao Versionamento no README
+
+### Alterado
+- SECURITY.md expandido: topologia de rede, portas, decisao MQTT ACLs, checklist SSH hardening, rotacao de tokens
+- CLAUDE.md, README.md e docs/README.md atualizados com novos diretorios e ADRs
+
+### Corrigido
+- `applicationId` obrigatorio na API de devices do ChirpStack v4 nos scripts de monitoramento
+
 ## [0.2.0] - 2026-03-29
 
 ### Adicionado
