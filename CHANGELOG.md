@@ -7,6 +7,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 ## [Nao publicado]
 
 ### Adicionado
+- Templates de backup e restore (`templates/backup/`): script de backup diario com sync para Google Drive via rclone, script de restauracao guiada interativo, guia de setup completo
 - Reestruturacao completa do repositorio para padrao open-source GitHub
 - Diretorio `templates/` com configuracoes reutilizaveis extraidas da documentacao
 - Diretorio `examples/` para firmwares de teste e validacao

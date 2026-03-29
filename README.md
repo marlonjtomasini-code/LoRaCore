@@ -44,7 +44,8 @@ LoRaCore/
 │   ├── systemd/             # Unit files e overrides de prioridade
 │   ├── sysctl/              # Tuning de buffers UDP
 │   ├── udev/                # I/O scheduler
-│   └── codecs/              # Decoders/encoders JavaScript para ChirpStack
+│   ├── codecs/              # Decoders/encoders JavaScript para ChirpStack
+│   └── backup/              # Backup diario + restore (Google Drive via rclone)
 ├── examples/                # Codigo de teste e referencia (NAO e core)
 │   └── firmware/            # Firmwares de validacao
 └── .github/                 # Templates e CI/CD

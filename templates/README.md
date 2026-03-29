@@ -40,6 +40,9 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 | `codecs/` | `example-thermal-sensor.js` | Exemplo — sensor termico industrial (decode only) |
 | `codecs/` | `example-actuator-bidirectional.js` | Exemplo — atuador bidirecional (decode + encode) |
 | `codecs/` | `README.md` | Guia de desenvolvimento de codecs |
+| `backup/` | `lorawan-backup.sh` | Backup diario: PostgreSQL + Redis + configs → Google Drive |
+| `backup/` | `lorawan-restore.sh` | Restauracao guiada (interativa, com --dry-run) |
+| `backup/` | `README.md` | Guia de setup: rclone, auth headless, cron, troubleshooting |
 
 ## PostgreSQL vs SQLite
 

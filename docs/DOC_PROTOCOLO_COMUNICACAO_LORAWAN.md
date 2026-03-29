@@ -1091,20 +1091,26 @@ Consulta a API REST do ChirpStack, verifica `lastSeenAt` de todos os devices reg
 
 ### 17.4 Backup Diario (cron as 3h)
 
-Script: `/home/marlon/backup_chirpstack.sh`
+Script: `/home/marlon/lorawan-backup.sh`
+Template: `templates/backup/lorawan-backup.sh`
 
 Conteudo do backup:
-- `chirpstack_YYYYMMDD.dump` - Dump completo do PostgreSQL
-- `redis_YYYYMMDD.rdb` - Snapshot do Redis
-- `configs_YYYYMMDD.tar.gz` - Todos os arquivos de configuracao
+- `chirpstack_YYYYMMDD.dump` - Dump completo do PostgreSQL (`pg_dump -Fc`)
+- `redis_YYYYMMDD.rdb` - Snapshot do Redis (BGSAVE + copy)
+- `configs_YYYYMMDD.tar.gz` - Todos os arquivos de configuracao + crontabs
 
-Diretorio: `/home/marlon/backups/`
-Retencao: 30 dias
+Diretorio local: `/home/marlon/backups/`
+Diretorio remoto: Google Drive via rclone (`gdrive:LoRaCore-backups/`)
+Retencao: 30 dias (local e remoto)
+
+O script executa em fases independentes — falha em uma fase nao aborta as demais. O sync remoto degrada graciosamente se o RPi estiver offline ou rclone nao estiver configurado.
 
 ```bash
 # Crontab do root
-0 3 * * * /bin/bash /home/marlon/backup_chirpstack.sh
+0 3 * * * /bin/bash /home/marlon/lorawan-backup.sh
 ```
+
+Para setup completo (rclone, Google Drive, cron): ver `templates/backup/README.md`.
 
 ### 17.5 Resumo de Automacoes (cron)
 
@@ -1113,13 +1119,29 @@ Retencao: 30 dias
 | `health_check.sh` | A cada 5 min | marlon | Servicos, memoria, disco, gateway |
 | `watchdog_concentrator.sh` | A cada 2 min | root | Auto-recovery do concentrador |
 | `device_monitor.sh` | A cada 3 min | root | Alerta de devices offline |
-| `backup_chirpstack.sh` | Diario 3h | root | Backup PostgreSQL + Redis + configs |
+| `lorawan-backup.sh` | Diario 3h | root | Backup PostgreSQL + Redis + configs + sync Google Drive |
 
 ### 17.6 Restauracao de Backup
 
+Script guiado: `/home/marlon/lorawan-restore.sh`
+Template: `templates/backup/lorawan-restore.sh`
+
+```bash
+# Restaurar do backup local
+sudo bash ~/lorawan-restore.sh --date YYYYMMDD
+
+# Restaurar puxando do Google Drive
+sudo bash ~/lorawan-restore.sh --date YYYYMMDD --from-remote
+
+# Simular sem executar
+sudo bash ~/lorawan-restore.sh --date YYYYMMDD --dry-run
+```
+
+O script e interativo — pede confirmacao antes de cada passo destrutivo (PostgreSQL, Redis, configs). Restauracao manual passo a passo:
+
 ```bash
 # PostgreSQL
-sudo -u postgres pg_restore -d chirpstack -c /home/marlon/backups/chirpstack_YYYYMMDD.dump
+sudo -u postgres pg_restore -d chirpstack -c --if-exists /home/marlon/backups/chirpstack_YYYYMMDD.dump
 
 # Redis
 sudo systemctl stop redis-server
@@ -1129,6 +1151,7 @@ sudo systemctl start redis-server
 
 # Configs
 sudo tar xzf /home/marlon/backups/configs_YYYYMMDD.tar.gz -C /
+sudo systemctl daemon-reload
 sudo systemctl restart chirpstack chirpstack-mqtt-forwarder mosquitto redis-server lora-pkt-fwd
 ```
 

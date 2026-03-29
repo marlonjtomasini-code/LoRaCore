@@ -51,14 +51,15 @@ Sempre leia as release notes antes de atualizar — versoes major podem ter brea
 
 ### O que acontece se o cartao SD morrer?
 
-O backup diario (Secao 17.4 do DOC_PROTOCOLO) garante perda maxima de 24h de configuracao:
+O backup diario com sync para Google Drive (Secao 17.4 do DOC_PROTOCOLO) garante perda maxima de 24h de configuracao:
 
 1. Instalar Ubuntu em um novo cartao SD
 2. Reinstalar a stack LoRaCore (Secao 19 do DOC_PROTOCOLO)
-3. Restaurar o backup (Secao 17.6): PostgreSQL dump + Redis snapshot + configs
-4. Os devices **nao precisam ser reprovisionados** — as session keys sao restauradas com o banco
+3. Instalar rclone e configurar acesso ao Google Drive (`templates/backup/README.md`)
+4. Restaurar do Google Drive: `sudo bash ~/lorawan-restore.sh --date YYYYMMDD --from-remote`
+5. Os devices **nao precisam ser reprovisionados** — as session keys sao restauradas com o banco
 
-**Recomendacao**: copiar os backups para fora do RPi periodicamente (`rsync` ou `scp` para outra maquina). Se o SD morrer, o backup local morre junto.
+Os backups sao sincronizados automaticamente para o Google Drive com retencao de 30 dias. Mesmo que o SD morra, os backups remotos permanecem acessiveis.
 
 ### Como mudar de US915 para outra regiao (EU868, AU915)?
 
