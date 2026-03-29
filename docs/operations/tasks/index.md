@@ -12,7 +12,6 @@ Ultima revisao: 2026-03-29 (producao roadmap adicionado)
 
 | ID | Status | Fase | Sev | Titulo | Deps | Plano |
 |---|---|---|---|---|---|---|
-| TASK-2026-0005 | pending | analise | S3 | Release Engineering — tags, semver, GitHub Releases | — | — |
 | TASK-2026-0006 | pending | analise | S2 | Templates de monitoramento e observabilidade leve | — | — |
 | TASK-2026-0007 | pending | analise | S3 | Testes automatizados de codecs no CI | — | — |
 | TASK-2026-0008 | pending | analise | S2 | Runbooks operacionais para incidentes de producao | TASK-0006 | — |
@@ -29,6 +28,7 @@ Ultima revisao: 2026-03-29 (producao roadmap adicionado)
 
 | ID | Status | Titulo | Encerrada |
 |---|---|---|---|
+| TASK-2026-0005 | done | Release Engineering — tags, semver, GitHub Releases | 2026-03-29 |
 | TASK-2026-0004 | done | Hardening pos-stress-test v2 (systemd, sysctl, codec) | 2026-03-29 |
 | TASK-2026-0002 | done | Implementar backup diario com sync para Google Drive | 2026-03-29 |
 | TASK-2026-0001 | done | Generalizar templates, codecs e docs para multiplos projetos consumidores | 2026-03-29 |

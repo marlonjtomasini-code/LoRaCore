@@ -1,12 +1,13 @@
 ---
 id: TASK-2026-0005
 title: Release Engineering — tags, semver, GitHub Releases
-status: pending
-phase: analise
+status: done
+phase: concluido
 severity: S3
 owner: coordenador
 created: 2026-03-29
 updated: 2026-03-29
+closed: 2026-03-29
 depends_on: []
 blocked_by: []
 parent: ~
@@ -35,17 +36,15 @@ tags:
 
 ## Retomada
 
-ESTADO: aguardando_execucao
+ESTADO: concluido
 AGENTE: coordenador
-PROXIMA: criar tag v0.1.0 no commit correto, promover CHANGELOG, criar tag v0.2.0, criar GitHub Releases
-LER:
-- CHANGELOG.md
-- CONTRIBUTING.md (secao Contrato de Interface)
-DECIDIDO:
-- semver: MAJOR = breaking (topics MQTT, schema codecs), MINOR = novos templates, PATCH = fixes
-- v0.1.0 = infraestrutura validada (2026-03-28), v0.2.0 = hardening + stress tests + backup + reestruturacao
-PENDENTE:
-- nenhuma
+RESULTADO:
+- git tag v0.1.0 criada no commit 417d88c (2026-03-28)
+- git tag v0.2.0 criada no commit 43ddf6f (HEAD)
+- GitHub Release v0.1.0: https://github.com/marlonjtomasini-code/LoRaCore/releases/tag/v0.1.0
+- GitHub Release v0.2.0: https://github.com/marlonjtomasini-code/LoRaCore/releases/tag/v0.2.0
+- CHANGELOG [Nao publicado] promovido para [0.2.0] - 2026-03-29
+- README.md: secao "Versionamento" adicionada com semver e breaking changes
 
 ## Analise Preliminar
 
@@ -74,10 +73,10 @@ O projeto tem 20+ commits e CHANGELOG com versao [0.1.0] definida, mas zero git 
 
 ## Checklist
 
-- [ ] Identificar commit exato do v0.1.0
-- [ ] Criar git tag v0.1.0
-- [ ] Promover [Nao publicado] para [0.2.0] no CHANGELOG.md
-- [ ] Criar git tag v0.2.0
-- [ ] Criar GitHub Release v0.1.0 com release notes
-- [ ] Criar GitHub Release v0.2.0 com release notes
-- [ ] Adicionar secao "Versionamento" no README.md
+- [x] Identificar commit exato do v0.1.0 (417d88c)
+- [x] Criar git tag v0.1.0
+- [x] Promover [Nao publicado] para [0.2.0] no CHANGELOG.md
+- [x] Criar git tag v0.2.0
+- [x] Criar GitHub Release v0.1.0 com release notes
+- [x] Criar GitHub Release v0.2.0 com release notes
+- [x] Adicionar secao "Versionamento" no README.md
