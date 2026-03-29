@@ -14,14 +14,13 @@ Nenhuma tarefa pendente.
 
 ## Tarefas bloqueadas
 
-| ID | Status | Fase | Sev | Titulo | Bloqueio |
-|---|---|---|---|---|---|
-| TASK-2026-0003 | blocked | analise | S3 | Migrar backup rclone de OAuth para Google Service Account | usuario: criar Google Service Account |
+Nenhuma tarefa bloqueada.
 
 ## Arquivadas recentes
 
 | ID | Status | Titulo | Encerrada |
 |---|---|---|---|
+| TASK-2026-0003 | cancelled | Migrar backup rclone de OAuth para Google Service Account | 2026-03-29 |
 | TASK-2026-0010 | done | Script de automacao de deploy | 2026-03-29 |
 | TASK-2026-0009 | done | Documentacao de seguranca expandida e ADR confirmed mode | 2026-03-29 |
 | TASK-2026-0008 | done | Runbooks operacionais para incidentes de producao | 2026-03-29 |
