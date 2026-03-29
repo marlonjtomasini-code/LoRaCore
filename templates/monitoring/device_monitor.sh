@@ -9,6 +9,7 @@
 #   <CHIRPSTACK_PORT>   — porta do ChirpStack REST API (ex: 8090)
 #   <CHIRPSTACK_TOKEN>  — API key do ChirpStack (gerar via Web UI ou psql)
 #   <OFFLINE_THRESHOLD> — segundos sem report para considerar offline (ex: 180)
+#   <APPLICATION_ID>    — UUID da application no ChirpStack (obter via Web UI ou API)
 #
 # Execucao: bash /home/<USER>/device_monitor.sh
 # Cron:     */3 * * * * /bin/bash /home/<USER>/device_monitor.sh
@@ -24,6 +25,7 @@ CHIRPSTACK_HOST="<CHIRPSTACK_HOST>"
 CHIRPSTACK_PORT="<CHIRPSTACK_PORT>"
 CHIRPSTACK_TOKEN="<CHIRPSTACK_TOKEN>"
 OFFLINE_THRESHOLD="<OFFLINE_THRESHOLD>"
+APPLICATION_ID="<APPLICATION_ID>"
 API_BASE="http://${CHIRPSTACK_HOST}:${CHIRPSTACK_PORT}/api"
 
 # =============================================================================
@@ -85,7 +87,7 @@ online_count=0
 
 # Buscar devices (limite 100 — ajustar se necessario)
 response=$(curl -s --max-time 10 \
-    "${API_BASE}/devices?limit=100" \
+    "${API_BASE}/devices?limit=100&applicationId=${APPLICATION_ID}" \
     -H "Authorization: Bearer ${CHIRPSTACK_TOKEN}" 2>/dev/null)
 
 if [ -z "$response" ]; then

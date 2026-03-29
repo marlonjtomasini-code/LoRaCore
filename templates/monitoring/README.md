@@ -25,6 +25,7 @@ Substitua os placeholders abaixo pelos valores da sua instalacao antes do deploy
 | `<CHIRPSTACK_PORT>` | Porta do ChirpStack REST API | `8090` | device_monitor, daily_report |
 | `<CHIRPSTACK_TOKEN>` | API key do ChirpStack | (gerar via Web UI) | device_monitor, daily_report |
 | `<OFFLINE_THRESHOLD>` | Segundos sem report para offline | `180` | device_monitor |
+| `<APPLICATION_ID>` | UUID da application no ChirpStack | (obter via Web UI ou API) | device_monitor, daily_report |
 | `<BACKUP_DIR>` | Diretorio de backups | `/home/seuusuario/backups` | daily_report |
 
 ## Deploy

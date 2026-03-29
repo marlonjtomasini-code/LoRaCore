@@ -9,6 +9,7 @@
 #   <CHIRPSTACK_PORT>   — porta do ChirpStack REST API (ex: 8090)
 #   <CHIRPSTACK_TOKEN>  — API key do ChirpStack
 #   <BACKUP_DIR>        — diretorio de backups (ex: /home/seuusuario/backups)
+#   <APPLICATION_ID>    — UUID da application no ChirpStack (obter via Web UI ou API)
 #
 # Execucao: bash /home/<USER>/daily_report.sh
 # Cron:     0 7 * * * /bin/bash /home/<USER>/daily_report.sh
@@ -24,6 +25,7 @@ CHIRPSTACK_HOST="<CHIRPSTACK_HOST>"
 CHIRPSTACK_PORT="<CHIRPSTACK_PORT>"
 CHIRPSTACK_TOKEN="<CHIRPSTACK_TOKEN>"
 BACKUP_DIR="<BACKUP_DIR>"
+APPLICATION_ID="<APPLICATION_ID>"
 API_BASE="http://${CHIRPSTACK_HOST}:${CHIRPSTACK_PORT}/api"
 
 # =============================================================================
@@ -152,7 +154,7 @@ log "DEVICES:"
 
 if command -v curl &>/dev/null; then
     response=$(curl -s --max-time 10 \
-        "${API_BASE}/devices?limit=100" \
+        "${API_BASE}/devices?limit=100&applicationId=${APPLICATION_ID}" \
         -H "Authorization: Bearer ${CHIRPSTACK_TOKEN}" 2>/dev/null)
 
     if [ -n "$response" ]; then
