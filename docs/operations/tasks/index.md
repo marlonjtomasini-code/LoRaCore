@@ -14,6 +14,7 @@ Ultima revisao: 2026-03-29
 |---|---|---|---|---|---|---|
 | TASK-2026-0001 | done | concluida | S2 | Generalizar templates, codecs e docs para multiplos projetos consumidores | — | — |
 | TASK-2026-0002 | done | concluida | S2 | Implementar backup diario com sync para Google Drive | — | — |
+| TASK-2026-0003 | pending | analise | S3 | Migrar backup rclone de OAuth para Google Service Account | TASK-2026-0002 | — |
 
 ## Tarefas bloqueadas
 
