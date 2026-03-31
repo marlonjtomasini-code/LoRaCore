@@ -15,6 +15,8 @@ Cada runbook e acionado por um **trigger** — o sinal que indica que o incident
 | [RUNBOOK-003](RUNBOOK-003-gateway-not-receiving.md) | Zero PULL_ACK, nenhum uplink recebido | 10-15 min |
 | [RUNBOOK-004](RUNBOOK-004-backup-failure.md) | Erro no log de backup, backup ausente | 5-10 min |
 | [RUNBOOK-005](RUNBOOK-005-device-offline.md) | ALERT OFFLINE no log, device sem report | 10-15 min |
+| [RUNBOOK-006](RUNBOOK-006-alerting-failure.md) | Alertas nao chegam, spool acumulando | 5-10 min |
+| [RUNBOOK-007](RUNBOOK-007-tunnel-down.md) | Tunnel SSH reverso inativo | 5-15 min |
 
 ## Estrutura de cada runbook
 
@@ -64,5 +66,7 @@ sudo systemctl restart lora-pkt-fwd
 | `/var/log/lorawan-health.log` | Health check, watchdog, device monitor |
 | `/var/log/lorawan-backup.log` | Backup diario |
 | `/var/log/lorawan-daily-report.log` | Relatorio diario |
+| `/var/log/lorawan-recovery.log` | Auto-recovery, disk cleanup, DB maintenance, rede, alertas |
 | `journalctl -u <servico>` | Logs de cada servico systemd |
+| `journalctl -u loracore-tunnel` | Tunnel de acesso remoto |
 | `/var/log/mosquitto/mosquitto.log` | Broker MQTT |

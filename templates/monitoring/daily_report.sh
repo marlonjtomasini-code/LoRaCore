@@ -16,6 +16,10 @@
 
 set -u
 
+# Alertas externos (opcional — no-op se nao instalado)
+# shellcheck source=/dev/null
+source "/home/<USER>/alert_dispatch.sh" 2>/dev/null || true
+
 # =============================================================================
 # Configuracao
 # =============================================================================
@@ -236,3 +240,8 @@ fi
 separator
 log "FIM DO RELATORIO DIARIO"
 separator
+
+# Enviar resumo via alerta externo
+if type alert_send &>/dev/null; then
+    alert_send INFO "daily_report" "Relatorio diario: mem ${mem_pct}%, disco $(df / | awk 'NR==2 {print $5}'), load ${load1}"
+fi

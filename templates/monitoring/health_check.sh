@@ -13,6 +13,10 @@
 
 set -u
 
+# Alertas externos (opcional — no-op se nao instalado)
+# shellcheck source=/dev/null
+source "/home/<USER>/alert_dispatch.sh" 2>/dev/null || true
+
 # =============================================================================
 # Configuracao
 # =============================================================================
@@ -73,6 +77,7 @@ check_services() {
             log "OK servico $svc ativo"
         else
             log_alert "servico $svc INATIVO"
+            type alert_send &>/dev/null && alert_send WARNING "health_check" "servico $svc INATIVO"
             failed=$((failed + 1))
         fi
     done
@@ -94,6 +99,7 @@ check_memory() {
         mem_used_pct=$(( (mem_total - mem_available) * 100 / mem_total ))
         if [ "$mem_used_pct" -ge "$MEM_THRESH" ]; then
             log_alert "memoria em ${mem_used_pct}% (limite: ${MEM_THRESH}%)"
+            type alert_send &>/dev/null && alert_send WARNING "health_check" "memoria em ${mem_used_pct}%"
         else
             log "OK memoria em ${mem_used_pct}%"
         fi
@@ -113,6 +119,7 @@ check_disk() {
     if [ -n "$disk_used_pct" ]; then
         if [ "$disk_used_pct" -ge "$DISK_THRESH" ]; then
             log_alert "disco em ${disk_used_pct}% (limite: ${DISK_THRESH}%)"
+            type alert_send &>/dev/null && alert_send WARNING "health_check" "disco em ${disk_used_pct}%"
         else
             log "OK disco em ${disk_used_pct}%"
         fi

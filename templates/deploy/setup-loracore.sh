@@ -323,6 +323,29 @@ systemctl disable systemd-networkd-wait-online.service 2>/dev/null || true
 systemctl mask systemd-networkd-wait-online.service 2>/dev/null || true
 
 run systemctl daemon-reload
+
+# Restart throttling para servicos LoRaWAN
+if [ -f "${TEMPLATES_DIR}/systemd/lorawan-restart-limits.conf" ]; then
+    for svc_dir in chirpstack.service.d mosquitto.service.d chirpstack-mqtt-forwarder.service.d lora-pkt-fwd.service.d; do
+        run mkdir -p "/etc/systemd/system/${svc_dir}"
+        run cp "${TEMPLATES_DIR}/systemd/lorawan-restart-limits.conf" "/etc/systemd/system/${svc_dir}/"
+    done
+    msg_ok "Restart throttling aplicado"
+fi
+
+# Hardware watchdog
+if [ -f "${TEMPLATES_DIR}/systemd/watchdog-hardware.conf" ]; then
+    run mkdir -p /etc/systemd/system.conf.d
+    run cp "${TEMPLATES_DIR}/systemd/watchdog-hardware.conf" /etc/systemd/system.conf.d/
+    msg_ok "Hardware watchdog configurado"
+fi
+
+if [ -f "${TEMPLATES_DIR}/systemd/bcm2835-wdt.conf" ]; then
+    run cp "${TEMPLATES_DIR}/systemd/bcm2835-wdt.conf" /etc/modules-load.d/
+    msg_ok "Modulo bcm2835_wdt habilitado no boot"
+fi
+
+run systemctl daemon-reload
 msg_ok "Systemd overrides e offline mode aplicados"
 
 # =============================================================================
@@ -392,7 +415,7 @@ fi
 
 if $SETUP_MONITORING && [ -d "${TEMPLATES_DIR}/monitoring" ]; then
     USER_HOME="/home/${CFG_USER}"
-    for script in health_check.sh watchdog_concentrator.sh device_monitor.sh daily_report.sh; do
+    for script in health_check.sh watchdog_concentrator.sh device_monitor.sh daily_report.sh auto_recovery.sh disk_cleanup.sh db_maintenance.sh network_recovery.sh; do
         if [ -f "${TEMPLATES_DIR}/monitoring/${script}" ]; then
             run cp "${TEMPLATES_DIR}/monitoring/${script}" "${USER_HOME}/"
             run chmod +x "${USER_HOME}/${script}"
@@ -444,6 +467,66 @@ if $SETUP_BACKUP && [ -d "${TEMPLATES_DIR}/backup" ]; then
     msg "  Ver: ${LORACORE_DIR}/templates/backup/README.md"
 else
     msg "Backup pulado"
+fi
+
+# =============================================================================
+# Fase 14: Alertas externos (opcional)
+# =============================================================================
+
+msg_step "Fase 14: Alertas externos (opcional)"
+
+SETUP_ALERTING=false
+if $INTERACTIVE; then
+    read -r -p "Configurar alertas externos (ntfy.sh)? [y/N]: " alert_confirm
+    if [[ "$alert_confirm" =~ ^[yY] ]]; then
+        SETUP_ALERTING=true
+    fi
+fi
+
+if $SETUP_ALERTING && [ -d "${TEMPLATES_DIR}/alerting" ]; then
+    USER_HOME="/home/${CFG_USER}"
+    for script in alert_dispatch.sh alert_flush.sh; do
+        if [ -f "${TEMPLATES_DIR}/alerting/${script}" ]; then
+            run cp "${TEMPLATES_DIR}/alerting/${script}" "${USER_HOME}/"
+            run chmod +x "${USER_HOME}/${script}"
+            sed -i "s|<USER>|${CFG_USER}|g" "${USER_HOME}/${script}"
+        fi
+    done
+
+    run mkdir -p /var/spool/lorawan-alerts
+    run chown "${CFG_USER}:${CFG_USER}" /var/spool/lorawan-alerts
+
+    msg_ok "Scripts de alerta copiados para ${USER_HOME}/"
+    msg_warn "Configure placeholders restantes (NTFY_TOPIC, ALERT_HOST_NAME) manualmente"
+    msg "  Ver: ${LORACORE_DIR}/templates/alerting/README.md"
+else
+    msg "Alertas externos pulados"
+fi
+
+# =============================================================================
+# Fase 15: Acesso remoto (opcional)
+# =============================================================================
+
+msg_step "Fase 15: Acesso remoto (opcional)"
+
+SETUP_TUNNEL=false
+if $INTERACTIVE; then
+    read -r -p "Configurar tunnel de acesso remoto (reverse SSH)? [y/N]: " tunnel_confirm
+    if [[ "$tunnel_confirm" =~ ^[yY] ]]; then
+        SETUP_TUNNEL=true
+    fi
+fi
+
+if $SETUP_TUNNEL && [ -f "${TEMPLATES_DIR}/remote-access/loracore-tunnel.service" ]; then
+    run cp "${TEMPLATES_DIR}/remote-access/loracore-tunnel.service" /etc/systemd/system/
+    sed -i "s|<USER>|${CFG_USER}|g" /etc/systemd/system/loracore-tunnel.service
+    run systemctl daemon-reload
+
+    msg_ok "loracore-tunnel.service instalado"
+    msg_warn "Configure placeholders do relay e execute setup-tunnel.sh"
+    msg "  Ver: ${LORACORE_DIR}/templates/remote-access/README.md"
+else
+    msg "Acesso remoto pulado"
 fi
 
 # =============================================================================

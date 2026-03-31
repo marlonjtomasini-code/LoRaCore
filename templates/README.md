@@ -35,6 +35,9 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 | `systemd/` | `chirpstack-priority.conf` | Override de prioridade CPU para ChirpStack |
 | `systemd/` | `mosquitto-priority.conf` | Override de prioridade CPU para Mosquitto |
 | `systemd/` | `postgresql-io-priority.conf` | Override de prioridade I/O para PostgreSQL |
+| `systemd/` | `lorawan-restart-limits.conf` | Restart throttling (StartLimitBurst) para servicos LoRaWAN |
+| `systemd/` | `watchdog-hardware.conf` | Hardware watchdog via systemd (RPi5 bcm2835_wdt) |
+| `systemd/` | `bcm2835-wdt.conf` | Autoload do modulo hardware watchdog no boot |
 | `sysctl/` | `90-lorawan.conf` | Tuning de buffers UDP (4 MB) |
 | `udev/` | `60-scheduler.rules` | I/O scheduler mq-deadline para microSD |
 | `codecs/` | `cubecell-class-a-sensor.js` | Decoder ChirpStack — CubeCell Class A |
@@ -51,9 +54,19 @@ Configuracoes reutilizaveis e validadas para deploy da infraestrutura LoRaWAN. E
 | `monitoring/` | `watchdog_concentrator.sh` | Watchdog: auto-recovery do concentrador (PULL_ACK timeout) |
 | `monitoring/` | `device_monitor.sh` | Monitor de devices offline via ChirpStack REST API |
 | `monitoring/` | `daily_report.sh` | Relatorio diario: dashboard textual de toda a infraestrutura |
+| `monitoring/` | `auto_recovery.sh` | Orquestrador de recuperacao de servicos com circuit breaker |
+| `monitoring/` | `disk_cleanup.sh` | Limpeza automatica de disco em 3 tiers escalantes |
+| `monitoring/` | `db_maintenance.sh` | VACUUM/REINDEX PostgreSQL, verificacao Redis, swap monitor |
+| `monitoring/` | `network_recovery.sh` | Recuperacao automatica de conectividade de rede |
 | `monitoring/` | `logrotate-lorawan.conf` | Logrotate semanal (12 semanas retencao, compressao) |
 | `monitoring/` | `README.md` | Guia de deploy: placeholders, cron, logrotate |
-| `deploy/` | `setup-loracore.sh` | Script interativo de deploy completo (13 fases) |
+| `alerting/` | `alert_dispatch.sh` | Biblioteca sourceable para spool de alertas externos |
+| `alerting/` | `alert_flush.sh` | Entrega alertas do spool via ntfy.sh/webhook |
+| `alerting/` | `README.md` | Guia de setup: ntfy.sh, placeholders, integracao |
+| `remote-access/` | `loracore-tunnel.service` | Systemd unit para reverse SSH tunnel via autossh |
+| `remote-access/` | `setup-tunnel.sh` | Setup interativo: gerar chave, testar relay, habilitar |
+| `remote-access/` | `README.md` | Guia: relay server, seguranca, troubleshooting |
+| `deploy/` | `setup-loracore.sh` | Script interativo de deploy completo (15 fases) |
 | `deploy/` | `README.md` | Prerequisitos, opcoes, disaster recovery |
 
 ## PostgreSQL vs SQLite

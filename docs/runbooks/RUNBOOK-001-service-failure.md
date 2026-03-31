@@ -2,6 +2,8 @@
 
 **Trigger:** `health_check.sh` reporta `[ALERTA] servico <nome> INATIVO` ou observacao direta via `systemctl status`.
 
+**Nota:** O `auto_recovery.sh` tenta recuperar servicos automaticamente a cada 2 minutos com circuit breaker. Este runbook e para quando a auto-recuperacao falhou (circuit breaker aberto) ou o operador quer investigar a causa raiz.
+
 **Tempo estimado:** 5-10 minutos
 
 ---

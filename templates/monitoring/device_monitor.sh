@@ -16,6 +16,10 @@
 
 set -u
 
+# Alertas externos (opcional — no-op se nao instalado)
+# shellcheck source=/dev/null
+source "/home/<USER>/alert_dispatch.sh" 2>/dev/null || true
+
 # =============================================================================
 # Configuracao
 # =============================================================================
@@ -152,3 +156,7 @@ for i in $(seq 0 $((device_count - 1))); do
 done
 
 log "resumo: ${online_count} online, ${offline_count} offline de ${device_count} devices"
+
+if [ "$offline_count" -gt 0 ]; then
+    type alert_send &>/dev/null && alert_send WARNING "device_monitor" "${offline_count} device(s) offline de ${device_count} total"
+fi

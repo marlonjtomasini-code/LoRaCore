@@ -1,0 +1,48 @@
+# Template LoRaCore — Reverse SSH tunnel para acesso remoto
+# Fonte: Plano de auto-recuperacao para operacao remota
+# Destino: /etc/systemd/system/loracore-tunnel.service
+#
+# Substituir:
+#   <USER>           — usuario do sistema (ex: seuusuario)
+#   <RELAY_HOST>     — hostname/IP do servidor relay (ex: relay.example.com)
+#   <RELAY_SSH_PORT> — porta SSH do relay (ex: 22)
+#   <RELAY_PORT>     — porta reversa no relay para acessar o RPi5 (ex: 20022)
+#   <RELAY_USER>     — usuario no relay (ex: tunnel-loracore)
+#
+# Pre-requisitos:
+#   - autossh instalado: sudo apt install autossh
+#   - Chave SSH dedicada: ssh-keygen -t ed25519 -f ~/.ssh/loracore_tunnel_key -N ""
+#   - Chave publica instalada no relay server
+#   - Consultar: templates/remote-access/README.md
+
+[Unit]
+Description=LoRaCore Reverse SSH Tunnel
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=<USER>
+
+# AUTOSSH_GATETIME=0: nao abortar se primeira conexao falhar (internet pode nao estar disponivel no boot)
+# AUTOSSH_POLL=60: verificar saude da conexao a cada 60s
+Environment="AUTOSSH_GATETIME=0"
+Environment="AUTOSSH_POLL=60"
+
+ExecStart=/usr/bin/autossh -M 0 -N \
+    -o "ServerAliveInterval 30" \
+    -o "ServerAliveCountMax 3" \
+    -o "ExitOnForwardFailure yes" \
+    -o "StrictHostKeyChecking accept-new" \
+    -R <RELAY_PORT>:localhost:22 \
+    <RELAY_USER>@<RELAY_HOST> \
+    -p <RELAY_SSH_PORT> \
+    -i /home/<USER>/.ssh/loracore_tunnel_key
+
+Restart=always
+RestartSec=30
+StartLimitIntervalSec=600
+StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target

@@ -16,6 +16,10 @@
 
 set -u
 
+# Alertas externos (opcional — no-op se nao instalado)
+# shellcheck source=/dev/null
+source "/home/<USER>/alert_dispatch.sh" 2>/dev/null || true
+
 # =============================================================================
 # Configuracao
 # =============================================================================
@@ -248,5 +252,9 @@ TODAY_COUNT=$(find "$BACKUP_DIR" -name "*_${DATE}.*" -type f 2>/dev/null | wc -l
 
 log "Resumo: ${TODAY_COUNT} artefato(s) gerado(s) hoje, diretorio total: ${TOTAL_SIZE}"
 log "=== Backup finalizado (exit code: ${EXIT_CODE}) ==="
+
+if [ "$EXIT_CODE" -ne 0 ]; then
+    type alert_send &>/dev/null && alert_send WARNING "backup" "Backup concluido com erros (exit code: ${EXIT_CODE})"
+fi
 
 exit "$EXIT_CODE"

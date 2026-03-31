@@ -12,6 +12,10 @@
 
 set -u
 
+# Alertas externos (opcional — no-op se nao instalado)
+# shellcheck source=/dev/null
+source "/home/<USER>/alert_dispatch.sh" 2>/dev/null || true
+
 # =============================================================================
 # Configuracao
 # =============================================================================
@@ -74,4 +78,5 @@ if systemctl is-active --quiet "$SERVICE"; then
     log "OK $SERVICE reiniciado com sucesso"
 else
     log_error "$SERVICE nao voltou apos restart"
+    type alert_send &>/dev/null && alert_send CRITICAL "watchdog" "$SERVICE nao voltou apos restart — intervencao manual necessaria"
 fi
