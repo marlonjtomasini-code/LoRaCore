@@ -1,6 +1,9 @@
-# TODO — LoRaCore
+# Backlog — LoRaCore
 
-<!-- Tarefas S2/S3. Uma linha por item. Formato: - [ ] descricao -->
+## WIP
 
-- [x] Instalar app ntfy no celular e assinar topico `loracore-coffeeprocessing-gw01`
-- [ ] Configurar relay server e executar `bash setup-tunnel.sh` no RPi5 para acesso remoto
+## Pendente
+- TASK-2026-0001 [S3] Configurar relay server e executar setup-tunnel.sh no RPi5 para acesso remoto
+
+## Recente
+- ~TASK-2026-0000~ [S3] Instalar app ntfy no celular e assinar topico loracore-coffeeprocessing-gw01 | concluido
