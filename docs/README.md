@@ -7,20 +7,17 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 | Documento | Descricao |
 |-----------|-----------|
 | [DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md](DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md) | Referencia autoritativa da infraestrutura — 22 secoes cobrindo todo o stack, da camada fisica ao monitoramento |
+| [LORACORE_AI_INTEGRATION_GUIDE.md](LORACORE_AI_INTEGRATION_GUIDE.md) | Guia self-contained para IAs de projetos consumidores — tudo inline, sem referencias externas |
 | [RELATORIO_STRESS_TEST.md](RELATORIO_STRESS_TEST.md) | Validacao de performance sob carga extrema (CPU 100%, memoria saturada, I/O intenso) |
 | [RELATORIO_STRESS_TEST_V2.md](RELATORIO_STRESS_TEST_V2.md) | Validacao do MQTT Forwarder (Rust) sob carga progressiva (6 fases, 79% entrega sob stress total) |
 | [RELATORIO_STRESS_TEST_V3.md](RELATORIO_STRESS_TEST_V3.md) | Validacao de 2 devices simultaneos sob carga extrema (D1=85%, D2=11%) |
 
-## Guias Praticos
+## Referencia
 
 | Documento | Descricao |
 |-----------|-----------|
-| [QUICK_START.md](QUICK_START.md) | Do zero ao primeiro uplink em 30 minutos (infra ja instalada) |
-| [GUIA_CONSUMIDOR.md](GUIA_CONSUMIDOR.md) | Como adotar o LoRaCore em um projeto externo — passo a passo completo |
-| [REFERENCIA_INTEGRACAO.md](REFERENCIA_INTEGRACAO.md) | Como consumir dados via MQTT, REST API e gRPC — schemas JSON, endpoints, exemplos Python/Bash |
 | [FAQ.md](FAQ.md) | Perguntas frequentes sobre capacidade, manutencao, operacao e firmware |
 | [GLOSSARIO.md](GLOSSARIO.md) | Definicoes dos termos tecnicos LoRaWAN usados na documentacao |
-| [GUIA_CLAUDE_CODE.md](GUIA_CLAUDE_CODE.md) | Guia rapido para uso do Claude Code no projeto |
 
 ## Runbooks Operacionais
 

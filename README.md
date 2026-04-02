@@ -85,12 +85,10 @@ LoRaCore/
 
 ## Documentacao
 
+- [AI Integration Guide](docs/LORACORE_AI_INTEGRATION_GUIDE.md) — guia self-contained para IAs de projetos consumidores
 - [Documentacao canonica da infraestrutura](docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md) — referencia completa (22 secoes)
-- [Quick Start](docs/QUICK_START.md) — do zero ao primeiro uplink em 30 minutos
-- [Referencia de Integracao](docs/REFERENCIA_INTEGRACAO.md) — MQTT, REST API, schemas JSON, exemplos
 - [FAQ](docs/FAQ.md) — perguntas frequentes sobre capacidade, operacao e manutencao
 - [Glossario](docs/GLOSSARIO.md) — definicoes dos termos tecnicos LoRaWAN
-- [Guia do Consumidor](docs/GUIA_CONSUMIDOR.md) — como adotar o LoRaCore no seu projeto
 - [Relatorio de stress test](docs/RELATORIO_STRESS_TEST.md) — performance sob carga extrema
 - [Relatorio de stress test v2](docs/RELATORIO_STRESS_TEST_V2.md) — validacao do MQTT Forwarder (Rust) sob carga progressiva
 - [Relatorio de stress test v3](docs/RELATORIO_STRESS_TEST_V3.md) — 2 devices simultaneos sob carga extrema

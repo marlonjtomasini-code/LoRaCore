@@ -575,7 +575,7 @@ if [ "$ERRORS" -eq 0 ]; then
     msg "  2. Registrar gateway (ID: ${CFG_GATEWAY_ID})"
     msg "  3. Criar device profiles e registrar devices"
     msg "  4. Configurar crontab para monitoramento e backup"
-    msg "  5. Consultar: ${LORACORE_DIR}/docs/QUICK_START.md"
+    msg "  5. Consultar: ${LORACORE_DIR}/docs/LORACORE_AI_INTEGRATION_GUIDE.md"
 else
     msg_err "Deploy concluido com ${ERRORS} erro(s). Verificar servicos inativos."
 fi

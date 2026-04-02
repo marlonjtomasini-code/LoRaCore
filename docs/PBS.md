@@ -22,7 +22,7 @@ Estado so avanca com evidencia (commit, teste, log de bancada). Nunca por estima
 
 ### 1. Documentacao Canonica
 - **Responsabilidade:** Referencia tecnica completa do sistema LoRaWAN (protocolo, integracao, operacao, FAQ, glossario)
-- **Arquivos:** `docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md`, `docs/QUICK_START.md`, `docs/GUIA_CONSUMIDOR.md`, `docs/REFERENCIA_INTEGRACAO.md`, `docs/FAQ.md`, `docs/GLOSSARIO.md`, `docs/RELATORIO_STRESS_TEST.md`, `docs/RELATORIO_STRESS_TEST_V2.md`, `docs/RELATORIO_STRESS_TEST_V3.md`, `docs/LORACORE_AI_INTEGRATION_GUIDE.md`
+- **Arquivos:** `docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md`, `docs/LORACORE_AI_INTEGRATION_GUIDE.md`, `docs/FAQ.md`, `docs/GLOSSARIO.md`, `docs/RELATORIO_STRESS_TEST.md`, `docs/RELATORIO_STRESS_TEST_V2.md`, `docs/RELATORIO_STRESS_TEST_V3.md`
 - **Depende de:** —
 - **Estado:** `producao`
 - **Evidencia:** 3 stress tests executados em RPi5 (commits v0.1.0–v0.2.0), feedback de uso real

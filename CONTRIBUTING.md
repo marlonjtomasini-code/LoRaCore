@@ -35,7 +35,7 @@ Exemplo: `feat: adicionar template de device profile Class B`
 Mudancas que afetam o formato de dados consumidos por projetos externos (payloads MQTT, respostas REST/gRPC, campos de codecs) devem:
 
 1. Ser registradas no [CHANGELOG.md](CHANGELOG.md) como **breaking change**
-2. Atualizar a secao "Versionamento de Schema" em [REFERENCIA_INTEGRACAO.md](docs/REFERENCIA_INTEGRACAO.md)
+2. Atualizar a secao correspondente em [LORACORE_AI_INTEGRATION_GUIDE.md](docs/LORACORE_AI_INTEGRATION_GUIDE.md)
 
 ## TDD para Embedded
 

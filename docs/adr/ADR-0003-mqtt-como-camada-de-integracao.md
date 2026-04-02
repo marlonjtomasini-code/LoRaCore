@@ -51,4 +51,4 @@ Adotar **MQTT como mecanismo primario** de integracao para dados em tempo real. 
 ## Referencia
 
 - [DOC_PROTOCOLO Secao 14](../DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md#14-topicos-mqtt-e-integracao-de-dados) — topicos MQTT e formato de dados
-- [REFERENCIA_INTEGRACAO.md](../REFERENCIA_INTEGRACAO.md) — guia completo de integracao para projetos consumidores
+- [LORACORE_AI_INTEGRATION_GUIDE.md](../LORACORE_AI_INTEGRATION_GUIDE.md) — guia completo de integracao para projetos consumidores

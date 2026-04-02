@@ -286,5 +286,5 @@ node templates/codecs/tests/test-cubecell-class-a-sensor.js
 ## Ver Tambem
 
 - [DOC_PROTOCOLO Secao 12.4](../../docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md) — Codecs no contexto da infraestrutura
-- [REFERENCIA_INTEGRACAO](../../docs/REFERENCIA_INTEGRACAO.md) — Como o campo `object` aparece no MQTT
+- [AI Integration Guide](../../docs/LORACORE_AI_INTEGRATION_GUIDE.md) — Como o campo `object` aparece no MQTT
 - [ChirpStack Codec docs](https://www.chirpstack.io/docs/chirpstack/use/codec/) — Referencia upstream
