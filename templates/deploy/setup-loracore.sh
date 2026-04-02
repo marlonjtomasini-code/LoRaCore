@@ -259,10 +259,14 @@ if [ -f "${TEMPLATES_DIR}/chirpstack/chirpstack.toml" ]; then
     msg_ok "chirpstack.toml aplicado"
 fi
 
-# Region config
-if [ -f "${TEMPLATES_DIR}/chirpstack/region_us915_0.toml" ]; then
-    cp "${TEMPLATES_DIR}/chirpstack/region_us915_0.toml" /etc/chirpstack/region_us915_0.toml
-    msg_ok "region_us915_0.toml aplicado"
+# Region config — customizar o arquivo default do pacote (nao sobrescrever)
+# O pacote chirpstack instala region_us915_0.toml com ~3000 linhas.
+# Sobrescrever com arquivo parcial causa erro "duplicate key".
+if [ -f /etc/chirpstack/region_us915_0.toml ]; then
+    sed -i '/regions.gateway.backend.mqtt/,/qos/{s/qos = 0/qos = 1/}' /etc/chirpstack/region_us915_0.toml
+    msg_ok "region_us915_0.toml customizado (qos=1)"
+else
+    msg_warn "region_us915_0.toml nao encontrado — instalar pacote chirpstack primeiro"
 fi
 
 # MQTT Forwarder config
@@ -272,7 +276,7 @@ if [ -f "${TEMPLATES_DIR}/mqtt-forwarder/chirpstack-mqtt-forwarder.toml" ]; then
 fi
 
 # Substituir placeholders comuns em todos os configs
-for conf in /etc/chirpstack/chirpstack.toml /etc/chirpstack/region_us915_0.toml /etc/chirpstack-mqtt-forwarder/chirpstack-mqtt-forwarder.toml; do
+for conf in /etc/chirpstack/chirpstack.toml /etc/chirpstack-mqtt-forwarder/chirpstack-mqtt-forwarder.toml; do
     if [ -f "$conf" ]; then
         sed -i "s|<GATEWAY_ID>|${CFG_GATEWAY_ID}|g" "$conf"
         sed -i "s|<USER>|${CFG_USER}|g" "$conf"

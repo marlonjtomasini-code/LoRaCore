@@ -1,25 +1,21 @@
-# Template LoRaCore — Configuracao de Regiao US915 sub-band 1
+# Template LoRaCore — Customizacoes de Regiao US915 sub-band 1
 # Fonte: docs/DOC_PROTOCOLO_COMUNICACAO_LORAWAN.md, Secoes 10.1 e 10.2
-# Destino: /etc/chirpstack/region_us915_0.toml
+# Destino: aplicar sobre /etc/chirpstack/region_us915_0.toml (default do pacote)
 #
-# Parametros essenciais (secao [regions.network]):
+# IMPORTANTE: este arquivo NAO substitui o region file inteiro do pacote.
+# O ChirpStack v4 instala um region_us915_0.toml completo com ~3000 linhas.
+# Sobrescrever com um arquivo parcial causa erro de "duplicate key".
+#
+# Para customizar, editar diretamente o arquivo do pacote:
+#   sudo sed -i '/regions.gateway.backend.mqtt/,/qos/{s/qos = 0/qos = 1/}' \
+#       /etc/chirpstack/region_us915_0.toml
+#
+# Parametros essenciais ja presentes no default do pacote:
 #   id = "us915_0"
 #   common_name = "US915"
-#   installation_margin = 10 dB
-#   rx_window = 0 (usa RX1 e RX2)
-#   rx1_delay = 1s
-#   rx1_dr_offset = 0
-#   rx2_dr = 8 (SF12/500kHz)
-#   rx2_frequency = 923300000 Hz
-#   adr_disabled = false
-#   min_dr = 0 (SF10/125kHz)
-#   max_dr = 5 (SF7/125kHz)
-#   enabled_uplink_channels = [0,1,2,3,4,5,6,7,64]
-
-# Topico MQTT do Gateway
-[regions.gateway.backend.mqtt]
-  topic_prefix = "us915_0"
-  share_name = "chirpstack"
-  server = "tcp://localhost:1883"
-  qos = 1
-  clean_session = false
+#   topic_prefix = "us915_0"
+#   share_name = "chirpstack"
+#   server = "tcp://localhost:1883"
+#
+# Customizacoes aplicadas pelo setup-loracore.sh:
+#   qos = 1 (default do pacote: 0)
