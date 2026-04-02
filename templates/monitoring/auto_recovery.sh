@@ -90,24 +90,9 @@ log_alert() {
 
 mkdir -p "$RUN_DIR"
 
-acquire_lock() {
-    if [ -f "$LOCK_FILE" ]; then
-        local lock_pid
-        lock_pid=$(cat "$LOCK_FILE" 2>/dev/null)
-        if [ -n "$lock_pid" ] && kill -0 "$lock_pid" 2>/dev/null; then
-            exit 0  # outra instancia rodando
-        fi
-        rm -f "$LOCK_FILE"  # lock orfao
-    fi
-    echo $$ > "$LOCK_FILE"
-}
-
-release_lock() {
-    rm -f "$LOCK_FILE"
-}
-
-trap release_lock EXIT
-acquire_lock
+# Lock atomico via flock — previne execucao concorrente
+exec 9>"$LOCK_FILE"
+flock -n 9 || exit 0
 
 # =============================================================================
 # Circuit Breaker
@@ -361,6 +346,12 @@ fullstack_restart() {
 # =============================================================================
 # Main
 # =============================================================================
+
+# Validar que placeholders foram substituidos pelo setup
+if grep -qE '<[A-Z_]+>' "$0" 2>/dev/null; then
+    echo "ERRO: placeholders nao substituidos em $0. Execute setup-loracore.sh primeiro." >&2
+    exit 1
+fi
 
 # Carregar alertas externos (se disponivel)
 # shellcheck source=/dev/null

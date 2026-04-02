@@ -51,10 +51,15 @@ prompt() {
     local var_name="$1" prompt_text="$2" default="$3"
     if $INTERACTIVE; then
         read -r -p "${prompt_text} [${default}]: " value
-        eval "$var_name=\"${value:-$default}\""
+        printf -v "$var_name" '%s' "${value:-$default}"
     else
-        eval "$var_name=\"$default\""
+        printf -v "$var_name" '%s' "$default"
     fi
+}
+
+# Escapar valor para uso seguro como replacement em sed
+sed_escape_replacement() {
+    printf '%s' "$1" | sed -e 's/[&\\/|]/\\&/g'
 }
 
 run() {
@@ -108,7 +113,7 @@ if $INTERACTIVE; then
     read -r -p "Secret do ChirpStack (Enter para auto-gerar): " CFG_SECRET
     if [ -z "$CFG_SECRET" ]; then
         CFG_SECRET=$(openssl rand -base64 32)
-        msg "Secret auto-gerado: $CFG_SECRET"
+        msg "Secret auto-gerado (salvo na configuracao)"
     fi
 else
     CFG_SECRET=$(openssl rand -base64 32)
@@ -125,7 +130,7 @@ msg "Resumo da configuracao:"
 msg "  Usuario:        $CFG_USER"
 msg "  Gateway ID:     $CFG_GATEWAY_ID"
 msg "  PG Password:    $CFG_PG_PASSWORD"
-msg "  Secret:         ${CFG_SECRET:0:8}..."
+msg "  Secret:         ********"
 msg "  Pkt Fwd Path:   $CFG_PKT_FWD_PATH"
 msg "  Backup Dir:     $CFG_BACKUP_DIR"
 msg "  LoRaCore Dir:   $LORACORE_DIR"
@@ -181,7 +186,8 @@ msg_step "Fase 3: Configurar PostgreSQL"
 if sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='chirpstack'" 2>/dev/null | grep -q 1; then
     msg_ok "Role chirpstack ja existe"
 else
-    run sudo -u postgres psql -c "CREATE ROLE chirpstack WITH LOGIN PASSWORD '${CFG_PG_PASSWORD}';"
+    escaped_pw="${CFG_PG_PASSWORD//\'/\'\'}"
+    run sudo -u postgres psql -c "CREATE ROLE chirpstack WITH LOGIN PASSWORD '${escaped_pw}';"
     msg_ok "Role chirpstack criada"
 fi
 
@@ -248,8 +254,8 @@ TEMPLATES_DIR="${LORACORE_DIR}/templates"
 # ChirpStack config
 if [ -f "${TEMPLATES_DIR}/chirpstack/chirpstack.toml" ]; then
     cp "${TEMPLATES_DIR}/chirpstack/chirpstack.toml" /etc/chirpstack/chirpstack.toml
-    sed -i "s|<SECRET>|${CFG_SECRET}|g" /etc/chirpstack/chirpstack.toml
-    sed -i "s|<PG_PASSWORD>|${CFG_PG_PASSWORD}|g" /etc/chirpstack/chirpstack.toml
+    sed -i "s|<SECRET>|$(sed_escape_replacement "$CFG_SECRET")|g" /etc/chirpstack/chirpstack.toml
+    sed -i "s|<PG_PASSWORD>|$(sed_escape_replacement "$CFG_PG_PASSWORD")|g" /etc/chirpstack/chirpstack.toml
     msg_ok "chirpstack.toml aplicado"
 fi
 
@@ -381,7 +387,7 @@ fi
 # Criar servico systemd do packet forwarder
 if [ -f "${TEMPLATES_DIR}/systemd/lora-pkt-fwd.service" ]; then
     run cp "${TEMPLATES_DIR}/systemd/lora-pkt-fwd.service" /etc/systemd/system/
-    sed -i "s|<USER>|${CFG_USER}|g; s|<PKT_FWD_PATH>|${CFG_PKT_FWD_PATH}|g" /etc/systemd/system/lora-pkt-fwd.service
+    sed -i "s|<USER>|$(sed_escape_replacement "$CFG_USER")|g; s|<PKT_FWD_PATH>|$(sed_escape_replacement "$CFG_PKT_FWD_PATH")|g" /etc/systemd/system/lora-pkt-fwd.service
     run systemctl daemon-reload
     run systemctl enable lora-pkt-fwd
     msg_ok "Servico lora-pkt-fwd configurado"
@@ -458,7 +464,7 @@ if $SETUP_BACKUP && [ -d "${TEMPLATES_DIR}/backup" ]; then
         if [ -f "${TEMPLATES_DIR}/backup/${script}" ]; then
             run cp "${TEMPLATES_DIR}/backup/${script}" "${USER_HOME}/"
             run chmod +x "${USER_HOME}/${script}"
-            sed -i "s|<USER>|${CFG_USER}|g; s|<BACKUP_DIR>|${CFG_BACKUP_DIR}|g; s|<PG_DATABASE>|chirpstack|g" "${USER_HOME}/${script}"
+            sed -i "s|<USER>|$(sed_escape_replacement "$CFG_USER")|g; s|<BACKUP_DIR>|$(sed_escape_replacement "$CFG_BACKUP_DIR")|g; s|<PG_DATABASE>|chirpstack|g" "${USER_HOME}/${script}"
         fi
     done
 

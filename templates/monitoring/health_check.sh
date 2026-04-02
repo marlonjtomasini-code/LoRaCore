@@ -13,6 +13,12 @@
 
 set -u
 
+# Validar que placeholders foram substituidos pelo setup
+if grep -qE '<[A-Z_]+>' "$0" 2>/dev/null; then
+    echo "ERRO: placeholders nao substituidos em $0. Execute setup-loracore.sh primeiro." >&2
+    exit 1
+fi
+
 # Alertas externos (opcional — no-op se nao instalado)
 # shellcheck source=/dev/null
 source "/home/<USER>/alert_dispatch.sh" 2>/dev/null || true

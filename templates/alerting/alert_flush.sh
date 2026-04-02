@@ -82,20 +82,29 @@ send_ntfy() {
 
     local title="[${severity}] ${host} — ${source}"
 
-    local auth_header=""
+    local curl_args=(curl -s --max-time 10
+        -H "Title: ${title}"
+        -H "Priority: ${priority}"
+        -H "Tags: ${severity,,}")
     if [ -n "$NTFY_TOKEN" ]; then
-        auth_header="-H \"Authorization: Bearer ${NTFY_TOKEN}\""
+        curl_args+=(-H "Authorization: Bearer ${NTFY_TOKEN}")
     fi
+    curl_args+=(-d "${message}" "${NTFY_TOPIC}")
 
-    eval curl -s --max-time 10 \
-        -H \"Title: "${title}"\" \
-        -H \"Priority: "${priority}"\" \
-        -H \"Tags: "${severity,,}"\" \
-        "$auth_header" \
-        -d \""${message}"\" \
-        \""${NTFY_TOPIC}"\" 2>/dev/null
+    "${curl_args[@]}" 2>/dev/null
 
     return $?
+}
+
+# Escapar string para uso seguro em JSON
+json_escape() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\t'/\\t}"
+    s="${s//$'\r'/\\r}"
+    printf '%s' "$s"
 }
 
 # Enviar via webhook generico
@@ -106,9 +115,17 @@ send_webhook() {
     local message="$4"
     local timestamp="$5"
 
+    local json_body
+    json_body=$(printf '{"severity":"%s","source":"%s","host":"%s","message":"%s","timestamp":"%s"}' \
+        "$(json_escape "$severity")" \
+        "$(json_escape "$source")" \
+        "$(json_escape "$host")" \
+        "$(json_escape "$message")" \
+        "$(json_escape "$timestamp")")
+
     curl -s --max-time 10 \
         -H "Content-Type: application/json" \
-        -d "{\"severity\":\"${severity}\",\"source\":\"${source}\",\"host\":\"${host}\",\"message\":\"${message}\",\"timestamp\":\"${timestamp}\"}" \
+        -d "$json_body" \
         "${WEBHOOK_URL}" 2>/dev/null
 
     return $?
