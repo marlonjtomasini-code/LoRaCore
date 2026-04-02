@@ -8,11 +8,10 @@ Firmwares de **validacao e stress test** da infraestrutura LoRaCore. Testam o fl
 
 | | Device 1 (`src/device1.cpp`) | Device 2 (`src/device2.cpp`) |
 |---|---|---|
-| **DevEUI** | `3daa1dd8e5ceb357` | `4bcc2ef7a1d06489` |
 | **TX intervalo** | 5s + offset aleatorio | 3s + offset aleatorio |
 | **Confirmacao** | Unconfirmed | **Confirmed** (8 retries) |
-| **Payload** | 7 bytes | 14 bytes |
-| **Marker** | `0x01` | `0x02` |
+| **Payload** | 4 bytes | 14 bytes |
+| **Codec** | `cubecell-class-a-sensor.js` | `cubecell-stress-test-device2.js` |
 | **Uso** | Baseline, validacao simples | **Stress test v2** |
 
 ## Hardware
@@ -45,13 +44,14 @@ As portas USB podem variar. Ajuste `upload_port` e `monitor_port` no `platformio
 
 ## Payloads
 
-### Device 1 — 7 bytes
+### Device 1 — 4 bytes
 
 | Byte | Campo | Tipo |
 |------|-------|------|
-| 0 | Device ID (`0x01`) | uint8 |
-| 1-2 | Tensao bateria (mV) | uint16 big-endian |
-| 3-6 | Contador TX | uint32 big-endian |
+| 0-1 | Tensao bateria (mV) | uint16 big-endian |
+| 2-3 | Uptime (segundos) | uint16 big-endian |
+
+Use o codec em [`templates/codecs/cubecell-class-a-sensor.js`](../../../templates/codecs/cubecell-class-a-sensor.js) no Device Profile do ChirpStack.
 
 ### Device 2 — 14 bytes
 
@@ -68,8 +68,8 @@ Use o codec em [`templates/codecs/cubecell-stress-test-device2.js`](../../../tem
 
 ## Serial Output
 
-- Device 1: `[D1][Xs] TX #N bat=XXXXmV fail=N rx=N`
-- Device 2: `[D2][Xs] TX #N bat=XXXXmV fail=N rx=N ack=N`
+- Device 1: `[D1][Xs] TX #N bat=XXXXmV rx=N`
+- Device 2: `[D2][Xs] TX #N bat=XXXXmV rx=N ack=N`
 
 ## Stress Test v2
 

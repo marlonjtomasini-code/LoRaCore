@@ -1,19 +1,18 @@
 /*
- * LoRaCore Stress Test — Device 1 (Baseline)
+ * LoRaCore — Device 1 (Baseline Sensor)
  * CubeCell HTCC-AB01 — OTAA US915 SB1
  *
- * TX a cada 5s, unconfirmed, payload 6 bytes
- * DevEUI: 3daa1dd8e5ceb357
- * AppKey: ae0a314fd2f6303d18ad170821f37c7d
+ * TX a cada 5s, unconfirmed, payload 4 bytes [bat(2) uptime(2)]
+ * Codec: templates/codecs/cubecell-class-a-sensor.js
  */
 #include "LoRaWan_APP.h"
 #include "Arduino.h"
 
-/* OTAA Keys — device registrado no ChirpStack */
-uint8_t devEui[] = { 0x3D, 0xAA, 0x1D, 0xD8, 0xE5, 0xCE, 0xB3, 0x57 };
+/* OTAA Keys — preencha com valores do seu Device Profile no ChirpStack */
+uint8_t devEui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };  /* seu DevEUI */
 uint8_t appEui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t appKey[] = { 0xAE, 0x0A, 0x31, 0x4F, 0xD2, 0xF6, 0x30, 0x3D,
-                     0x18, 0xAD, 0x17, 0x08, 0x21, 0xF3, 0x7C, 0x7D };
+uint8_t appKey[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };  /* seu AppKey */
 
 /* ABP placeholders (not used) */
 uint8_t nwkSKey[] = { 0 };
@@ -36,24 +35,21 @@ uint32_t appTxDutyCycle       = 5000;    /* 5 segundos */
 
 static uint32_t txCount = 0;
 static uint32_t rxCount = 0;
-static uint32_t txFail  = 0;
 
 static void prepareTxFrame(uint8_t port) {
     uint16_t batteryVoltage = getBatteryVoltage();
+    uint16_t uptime = (uint16_t)(millis() / 1000);
     txCount++;
 
-    /* Payload: [deviceId(1)] [bat(2)] [txCount(4)] = 7 bytes */
-    appDataSize = 7;
-    appData[0] = 0x01;                              /* device ID marker */
-    appData[1] = (uint8_t)(batteryVoltage >> 8);
-    appData[2] = (uint8_t)(batteryVoltage);
-    appData[3] = (uint8_t)(txCount >> 24);
-    appData[4] = (uint8_t)(txCount >> 16);
-    appData[5] = (uint8_t)(txCount >> 8);
-    appData[6] = (uint8_t)(txCount);
+    /* Payload: [bat(2)] [uptime(2)] = 4 bytes — cubecell-class-a-sensor.js */
+    appDataSize = 4;
+    appData[0] = (uint8_t)(batteryVoltage >> 8);
+    appData[1] = (uint8_t)(batteryVoltage);
+    appData[2] = (uint8_t)(uptime >> 8);
+    appData[3] = (uint8_t)(uptime);
 
-    Serial.printf("[D1][%lus] TX #%lu bat=%dmV fail=%lu rx=%lu\r\n",
-                  millis()/1000, txCount, batteryVoltage, txFail, rxCount);
+    Serial.printf("[D1][%us] TX #%lu bat=%dmV rx=%lu\r\n",
+                  uptime, txCount, batteryVoltage, rxCount);
 }
 
 void downLinkDataHandle(McpsIndication_t *mcpsIndication) {
@@ -64,8 +60,8 @@ void downLinkDataHandle(McpsIndication_t *mcpsIndication) {
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("\r\n=== LoRaCore Stress Device 1 ===");
-    Serial.println("TX=5s | Unconfirmed | Payload=7B");
+    Serial.println("\r\n=== LoRaCore Device 1 (Baseline) ===");
+    Serial.println("TX=5s | Unconfirmed | Payload=4B");
     deviceState = DEVICE_STATE_INIT;
     LoRaWAN.ifskipjoin();
 }

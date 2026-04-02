@@ -1,19 +1,18 @@
 /*
- * LoRaCore Stress Test — Device 2 (Agressivo)
+ * LoRaCore — Device 2 (Stress Test)
  * CubeCell HTCC-AB01 — OTAA US915 SB1
  *
- * TX a cada 3s, CONFIRMED, payload 14 bytes (estendido)
- * DevEUI: 4bcc2ef7a1d06489
- * AppKey: c7f3e92a5d1b084673de9af42b6c815e
+ * TX a cada 3s, CONFIRMED, payload 14 bytes
+ * Codec: templates/codecs/cubecell-stress-test-device2.js
  */
 #include "LoRaWan_APP.h"
 #include "Arduino.h"
 
-/* OTAA Keys — device 2 (registrar no ChirpStack) */
-uint8_t devEui[] = { 0x4B, 0xCC, 0x2E, 0xF7, 0xA1, 0xD0, 0x64, 0x89 };
+/* OTAA Keys — preencha com valores do seu Device Profile no ChirpStack */
+uint8_t devEui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };  /* seu DevEUI */
 uint8_t appEui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t appKey[] = { 0xC7, 0xF3, 0xE9, 0x2A, 0x5D, 0x1B, 0x08, 0x46,
-                     0x73, 0xDE, 0x9A, 0xF4, 0x2B, 0x6C, 0x81, 0x5E };
+uint8_t appKey[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };  /* seu AppKey */
 
 /* ABP placeholders (not used) */
 uint8_t nwkSKey[] = { 0 };
@@ -36,7 +35,6 @@ uint32_t appTxDutyCycle       = 3000;    /* 3 segundos — mais agressivo */
 
 static uint32_t txCount = 0;
 static uint32_t rxCount = 0;
-static uint32_t txFail  = 0;
 static uint32_t ackCount = 0;
 
 static void prepareTxFrame(uint8_t port) {
@@ -64,8 +62,8 @@ static void prepareTxFrame(uint8_t port) {
     appData[12] = (uint8_t)(rxCount);
     appData[13] = (uint8_t)(ackCount);
 
-    Serial.printf("[D2][%lus] TX #%lu bat=%dmV fail=%lu rx=%lu ack=%lu\r\n",
-                  uptime, txCount, batteryVoltage, txFail, rxCount, ackCount);
+    Serial.printf("[D2][%lus] TX #%lu bat=%dmV rx=%lu ack=%lu\r\n",
+                  uptime, txCount, batteryVoltage, rxCount, ackCount);
 }
 
 void downLinkDataHandle(McpsIndication_t *mcpsIndication) {
