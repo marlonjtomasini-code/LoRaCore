@@ -34,7 +34,7 @@ fi
 # 4. Logs sem erros
 ERRORS=$(ssh marlon@$IP 'journalctl -u chirpstack -n 30 --no-pager 2>/dev/null' | grep -ci "error\|panic" 2>/dev/null || true)
 ERRORS="${ERRORS:-0}"
-if [ "$ERRORS" -gt 0 ] 2>/dev/null; then
+if [ "${ERRORS:-0}" -gt 0 ]; then
   echo "ALERTA: $ERRORS erros nos logs do chirpstack"
 fi
 

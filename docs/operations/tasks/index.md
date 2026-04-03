@@ -10,7 +10,9 @@ Ultima revisao: 2026-03-29 (producao roadmap adicionado)
 
 ## Tarefas abertas
 
-Nenhuma tarefa pendente.
+| ID | Status | Titulo |
+|---|---|---|
+| TASK-2026-0013 | pendente | Melhorar confiabilidade do backup |
 
 ## Tarefas bloqueadas
 
@@ -20,6 +22,8 @@ Nenhuma tarefa bloqueada.
 
 | ID | Status | Titulo | Encerrada |
 |---|---|---|---|
+| TASK-2026-0015 | done | Melhorias CI/CD — TOML fallback, artefato firmware, placeholders, smoke-test portavel | 2026-04-03 |
+| TASK-2026-0014 | done | Hardening de codecs e testes | 2026-04-03 |
 | TASK-2026-0003 | cancelled | Migrar backup rclone de OAuth para Google Service Account | 2026-03-29 |
 | TASK-2026-0010 | done | Script de automacao de deploy | 2026-03-29 |
 | TASK-2026-0009 | done | Documentacao de seguranca expandida e ADR confirmed mode | 2026-03-29 |
