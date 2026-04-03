@@ -33,7 +33,7 @@ DRY_RUN=false
 CFG_USER=""
 CFG_GATEWAY_ID=""
 CFG_SECRET=""
-CFG_PG_PASSWORD="chirpstack"
+CFG_PG_PASSWORD="$(openssl rand -base64 16 | tr -dc 'A-Za-z0-9' | head -c 20)"
 CFG_PKT_FWD_PATH=""
 CFG_BACKUP_DIR=""
 
@@ -107,7 +107,7 @@ msg_step "Fase 0: Configuracao"
 
 prompt CFG_USER "Usuario do sistema" "$(logname 2>/dev/null || echo 'loracore')"
 prompt CFG_GATEWAY_ID "Gateway ID (16 hex, ex: 2CCF67FFFE576A1D)" "0000000000000000"
-prompt CFG_PG_PASSWORD "Senha do PostgreSQL para ChirpStack" "chirpstack"
+prompt CFG_PG_PASSWORD "Senha do PostgreSQL para ChirpStack (auto-gerada)" "$CFG_PG_PASSWORD"
 
 if $INTERACTIVE; then
     read -r -p "Secret do ChirpStack (Enter para auto-gerar): " CFG_SECRET

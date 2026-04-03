@@ -82,7 +82,7 @@ send_ntfy() {
 
     local title="[${severity}] ${host} — ${source}"
 
-    local curl_args=(curl -s --max-time 10
+    local curl_args=(curl -s --connect-timeout 5 --max-time 10
         -H "Title: ${title}"
         -H "Priority: ${priority}"
         -H "Tags: ${severity,,}")
@@ -123,7 +123,7 @@ send_webhook() {
         "$(json_escape "$message")" \
         "$(json_escape "$timestamp")")
 
-    curl -s --max-time 10 \
+    curl -s --connect-timeout 5 --max-time 10 \
         -H "Content-Type: application/json" \
         -d "$json_body" \
         "${WEBHOOK_URL}" 2>/dev/null

@@ -1,5 +1,6 @@
 {
   "_comment": "Template LoRaCore — Device Profile Class A Sensor OTAA. Importar via REST API POST /api/device-profiles ou criar manualmente na web UI.",
+  "_codecSource": "templates/codecs/cubecell-class-a-sensor.js",
   "deviceProfile": {
     "name": "LoRaCore-ClassA-Sensor-OTAA",
     "description": "Sensor LoRaWAN Class A com ativacao OTAA. Transmite telemetria periodicamente e dorme entre transmissoes (otimizado para bateria). Personalize o nome, codec e intervalo de uplink conforme seu projeto.",

@@ -28,3 +28,15 @@ function encodeDownlink(input) {
   var val = (input.data.value || 0) & 0xFF;
   return { bytes: [cmd, val] };
 }
+
+// Decode downlink (visualizacao no ChirpStack Web UI)
+function decodeDownlink(input) {
+  var bytes = input.bytes;
+  if (bytes.length < 2) return { errors: ["downlink payload too short: expected 2 bytes, got " + bytes.length] };
+  return {
+    data: {
+      command: bytes[0],
+      value: bytes[1]
+    }
+  };
+}

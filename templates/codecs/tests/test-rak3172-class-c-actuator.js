@@ -44,6 +44,35 @@ var enc3 = encodeDownlink({ data: { command: 0x01, value: 0xFF } });
 assert.strictEqual(enc3.bytes[0], 1);
 assert.strictEqual(enc3.bytes[1], 255);
 
+// === decodeDownlink ===
+
+// --- decode downlink basico ---
+var dec1 = decodeDownlink({ bytes: [5, 100], fPort: 1 });
+assert.strictEqual(dec1.data.command, 5);
+assert.strictEqual(dec1.data.value, 100);
+assert(!dec1.errors);
+
+// --- decode downlink zeros ---
+var dec2 = decodeDownlink({ bytes: [0, 0], fPort: 1 });
+assert.strictEqual(dec2.data.command, 0);
+assert.strictEqual(dec2.data.value, 0);
+
+// --- decode downlink max ---
+var dec3 = decodeDownlink({ bytes: [0xFF, 0xFF], fPort: 1 });
+assert.strictEqual(dec3.data.command, 255);
+assert.strictEqual(dec3.data.value, 255);
+
+// --- decode downlink error: payload curto ---
+var dec4 = decodeDownlink({ bytes: [0x01], fPort: 1 });
+assert(dec4.errors);
+assert(dec4.errors[0].indexOf("too short") !== -1);
+
+// --- roundtrip: encode -> decode downlink ---
+var rt1 = encodeDownlink({ data: { command: 42, value: 200 } });
+var rt2 = decodeDownlink({ bytes: rt1.bytes, fPort: 1 });
+assert.strictEqual(rt2.data.command, 42);
+assert.strictEqual(rt2.data.value, 200);
+
 // === encodeDownlink — overflow, negativos, floats ===
 
 // --- overflow: valores > 255 devem ser truncados para byte ---

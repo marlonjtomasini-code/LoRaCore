@@ -1,5 +1,6 @@
 {
   "_comment": "Template LoRaCore — Device Profile Class C Actuator OTAA. Importar via REST API POST /api/device-profiles ou criar manualmente na web UI.",
+  "_codecSource": "templates/codecs/rak3172-class-c-actuator.js",
   "deviceProfile": {
     "name": "LoRaCore-ClassC-Actuator-OTAA",
     "description": "Atuador LoRaWAN Class C com ativacao OTAA. Mantem janela de recepcao sempre aberta para receber comandos a qualquer momento. Requer alimentacao externa (nao indicado para bateria). Personalize o nome, codec e timeout conforme seu projeto.",

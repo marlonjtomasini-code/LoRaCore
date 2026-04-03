@@ -4,6 +4,8 @@
 
 **Tempo estimado:** 15-30 minutos
 
+> **Placeholders:** Substituir `<LORACORE_HOST>` pelo IP/hostname do gateway e `<USER>` pelo usuario SSH antes de executar os comandos.
+
 ---
 
 ## 1. Pre-requisitos
@@ -17,7 +19,7 @@ Antes de iniciar, confirme:
 
 ```bash
 # Conectar ao gateway
-$ ssh marlon@192.168.1.200
+$ ssh <USER>@<LORACORE_HOST>
 ```
 
 ### 1.1 Verificar saude da stack
@@ -372,7 +374,7 @@ $ curl -s "http://localhost:8090/api/devices/<DEV_EUI>" \
 
 Antes de considerar o cadastro completo, confirme todos os itens:
 
-- [ ] Device aparece no ChirpStack Web UI (`http://192.168.1.200:8080`)
+- [ ] Device aparece no ChirpStack Web UI (`http://<LORACORE_HOST>:8080`)
 - [ ] Join OTAA completado com sucesso
 - [ ] Uplinks chegando com dados decodificados no campo `object`
 - [ ] RSSI e SNR em niveis aceitaveis
@@ -386,10 +388,10 @@ Antes de considerar o cadastro completo, confirme todos os itens:
 
 | Item | Valor |
 |------|-------|
-| SSH | `marlon@192.168.1.200` |
-| ChirpStack Web UI | `http://192.168.1.200:8080` |
-| REST API | `http://192.168.1.200:8090/api` |
-| MQTT | `192.168.1.200:1883` |
+| SSH | `<USER>@<LORACORE_HOST>` |
+| ChirpStack Web UI | `http://<LORACORE_HOST>:8080` |
+| REST API | `http://<LORACORE_HOST>:8090/api` |
+| MQTT | `<LORACORE_HOST>:1883` |
 | Auth header | `Grpc-Metadata-Authorization: Bearer <TOKEN>` |
 | JoinEUI | `0000000000000000` (fixo) |
 | Regiao | US915 sub-band 1 (canais 0-7) |

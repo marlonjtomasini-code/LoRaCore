@@ -28,6 +28,9 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 | [RUNBOOK-003](runbooks/RUNBOOK-003-gateway-not-receiving.md) | Gateway nao recebe uplinks |
 | [RUNBOOK-004](runbooks/RUNBOOK-004-backup-failure.md) | Falha no backup diario |
 | [RUNBOOK-005](runbooks/RUNBOOK-005-device-offline.md) | Device offline |
+| [RUNBOOK-006](runbooks/RUNBOOK-006-alerting-failure.md) | Falha no sistema de alertas |
+| [RUNBOOK-007](runbooks/RUNBOOK-007-tunnel-down.md) | Tunnel SSH caiu |
+| [RUNBOOK-008](runbooks/RUNBOOK-008-new-device-registration.md) | Cadastro de novo device |
 
 ## Decisoes Arquiteturais (ADR)
 
@@ -38,6 +41,8 @@ Indice da documentacao do kit de infraestrutura LoRaWAN.
 | [ADR-0003](adr/ADR-0003-mqtt-como-camada-de-integracao.md) | MQTT como camada de integracao |
 | [ADR-0004](adr/ADR-0004-observabilidade-scripts-vs-prometheus.md) | Observabilidade via scripts shell vs Prometheus/Grafana |
 | [ADR-0005](adr/ADR-0005-confirmed-uplink-degradacao-sob-stress.md) | Confirmed uplinks degradam sob stress — usar unconfirmed para telemetria |
+| [ADR-0006](adr/ADR-0006-alertas-ntfy-vs-telegram-email.md) | Alertas via ntfy.sh vs Telegram/email |
+| [ADR-0007](adr/ADR-0007-acesso-remoto-ssh-tunnel-vs-vpn.md) | Acesso remoto via SSH tunnel vs VPN |
 
 ## Gestao de Tarefas
 
