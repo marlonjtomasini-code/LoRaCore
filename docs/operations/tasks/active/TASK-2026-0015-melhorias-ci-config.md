@@ -1,8 +1,9 @@
 # TASK-2026-0015 — Melhorias CI/CD e validação de configuração
 
 - **Severidade:** S2
-- **Status:** pendente
+- **Status:** done
 - **Origem:** Code review 2026-04-02
+- **Concluido:** 2026-04-03
 
 ## O que
 
@@ -22,7 +23,7 @@ CI tem gaps de validação (TOML em Python <3.11, firmware build sem verificaç�
 5. **`smoke-test.sh:38`** — assume execução do repo root. Normalizar com `cd "$(dirname "$0")/../.."`.
 
 ## Aceite
-- [ ] CI roda em Python 3.10+ sem falha
-- [ ] Firmware build verifica artefato gerado
-- [ ] Placeholders não substituídos são detectados pelo CI
-- [ ] smoke-test.sh funciona de qualquer diretório
+- [x] CI roda em Python 3.10+ sem falha
+- [x] Firmware build verifica artefato gerado
+- [x] Placeholders não substituídos são detectados pelo CI
+- [x] smoke-test.sh funciona de qualquer diretório

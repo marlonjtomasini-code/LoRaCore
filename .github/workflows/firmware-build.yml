@@ -30,3 +30,13 @@ jobs:
 
       - name: Compilar firmware
         run: cd examples/firmware/${{ matrix.example }} && pio run
+
+      - name: Verificar artefato gerado
+        run: |
+          BINCOUNT=$(find examples/firmware/${{ matrix.example }}/.pio/build -name 'firmware.*' \( -name '*.bin' -o -name '*.hex' -o -name '*.elf' \) 2>/dev/null | wc -l)
+          if [ "$BINCOUNT" -eq 0 ]; then
+            echo "::error::Nenhum artefato de firmware encontrado em .pio/build/"
+            exit 1
+          fi
+          echo "Artefato(s) encontrado(s): $BINCOUNT"
+          find examples/firmware/${{ matrix.example }}/.pio/build -name 'firmware.*' \( -name '*.bin' -o -name '*.hex' -o -name '*.elf' \) -exec ls -lh {} \;

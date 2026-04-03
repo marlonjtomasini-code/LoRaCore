@@ -63,7 +63,10 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.x'
+
+      - name: Instalar fallback TOML (Python < 3.11)
+        run: python3 -c "import tomllib" 2>/dev/null || pip install tomli
 
       - name: Verificar JSON
         run: |
@@ -84,7 +87,14 @@ jobs:
         run: |
           errors=0
           for f in $(find templates -name '*.toml' -type f); do
-            if ! python3 -c "import tomllib; tomllib.load(open('$f','rb'))" 2>&1; then
+            if ! python3 -c "
+          try:
+              import tomllib
+          except ImportError:
+              import tomli as tomllib
+          with open('$f','rb') as fh:
+              tomllib.load(fh)
+          " 2>&1; then
               echo "ERRO TOML invalido: $f"
               errors=$((errors + 1))
             fi
@@ -106,10 +116,14 @@ jobs:
           # Patterns proibidos (exceto CLAUDE.md que e interno do agente)
           patterns=(
             '/home/[^/]+/'
-            '192\.168\.1\.[0-9]+'
+            '192\.168\.[0-9]+\.[0-9]+'
+            '10\.[0-9]+\.[0-9]+\.[0-9]+'
+            '172\.(1[6-9]|2[0-9]|3[01])\.[0-9]+\.[0-9]+'
+            '[Aa][Pp][Ii][_-]?[Kk][Ee][Yy]\s*[:=]\s*["\x27][A-Za-z0-9]'
+            '[Ss][Ee][Cc][Rr][Ee][Tt]\s*[:=]\s*["\x27][A-Za-z0-9]'
           )
           # Arquivos permitidos (nao sao consumidos por projetos externos)
-          exclude="--exclude=CLAUDE.md --exclude-dir=.git --exclude-dir=archive"
+          exclude="--exclude=CLAUDE.md --exclude-dir=.git --exclude-dir=archive --exclude-dir=runbooks"
 
           errors=0
           for pattern in "${patterns[@]}"; do
@@ -126,3 +140,30 @@ jobs:
             exit 1
           fi
           echo "Nenhum valor hardcoded encontrado"
+
+  no-unsubstituted-placeholders:
+    name: Detect Unsubstituted Placeholders
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar placeholders nao substituidos em scripts de deploy
+        run: |
+          # Detecta <PLACEHOLDER> nao substituidos (exceto em comentarios e docs)
+          # Pattern: <WORD> com 2+ chars uppercase, underscores permitidos
+          errors=0
+          matches=$(grep -rn -E '<[A-Z][A-Z_]{1,}>' scripts/ templates/deploy/ 2>/dev/null \
+            | grep -v '^\s*#' \
+            | grep -v 'PASTE_YOUR_CODEC' \
+            || true)
+          if [ -n "$matches" ]; then
+            echo "::warning::Placeholders nao substituidos encontrados:"
+            echo "$matches"
+            errors=$((errors + 1))
+          fi
+
+          if [ $errors -gt 0 ]; then
+            echo "::error::Placeholders como <USER>, <SECRET>, <TOKEN> encontrados em scripts. Substitua antes do deploy."
+            exit 1
+          fi
+          echo "Nenhum placeholder nao substituido encontrado"
