@@ -2,13 +2,7 @@
 
 **Trigger:** Novo dispositivo LoRaWAN precisa ser registrado na infraestrutura (gateway + ChirpStack).
 
-**Tempo estimado:** 15-30 minutos (manual) | ~2 minutos (automatizado)
-
-> **Automacao disponivel:** Use `/project:register-device <nome> <tipo> <app> <firmware-path>` no Claude Code, ou execute diretamente:
-> ```bash
-> bash scripts/register-device.sh --name <nome> --type <sensor|actuator> --app <app> --json
-> ```
-> O script automatiza os passos 1-6 deste runbook. A skill automatiza o fluxo completo incluindo injecao de credenciais no firmware e compilacao.
+**Tempo estimado:** 15-30 minutos
 
 ---
 
