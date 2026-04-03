@@ -26,8 +26,8 @@ if ! curl -sf "http://${IP}:8080" 2>/dev/null | grep -qi chirpstack; then
   FAILS=$((FAILS+1))
 fi
 
-# 3. MQTT broker
-if ! timeout 5 mosquitto_sub -h "$IP" -t '$SYS/broker/uptime' -C 1 >/dev/null 2>&1; then
+# 3. MQTT broker (via SSH — Mosquitto escuta apenas localhost por seguranca)
+if ! ssh "marlon@${IP}" "timeout 5 mosquitto_sub -h localhost -t '\$SYS/broker/uptime' -C 1" >/dev/null 2>&1; then
   echo "FALHA: MQTT broker nao responde"
   FAILS=$((FAILS+1))
 fi
