@@ -60,7 +60,7 @@ function decodeUplink(input) {
 
   var status = bytes[0];
   var positionPct = bytes[1];
-  var supplyMv = (bytes[2] << 8) | bytes[3];
+  var supplyMv = ((bytes[2] << 8) | bytes[3]) & 0xFFFF;
   var flags = bytes[4];
 
   return {

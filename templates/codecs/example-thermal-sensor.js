@@ -24,7 +24,7 @@ function decodeUplink(input) {
   }
 
   // Temperatura: int16 signed big-endian (x100)
-  var tempRaw = (bytes[0] << 8) | bytes[1];
+  var tempRaw = ((bytes[0] << 8) | bytes[1]) & 0xFFFF;
   if (tempRaw > 0x7FFF) {
     tempRaw = tempRaw - 0x10000; // converter para signed
   }
@@ -33,7 +33,7 @@ function decodeUplink(input) {
   var humidity = bytes[2];
 
   // Bateria: uint16 big-endian (mV)
-  var batteryMv = (bytes[3] << 8) | bytes[4];
+  var batteryMv = ((bytes[3] << 8) | bytes[4]) & 0xFFFF;
 
   // Flags de status: uint8 bitmask
   var statusFlags = bytes[5];

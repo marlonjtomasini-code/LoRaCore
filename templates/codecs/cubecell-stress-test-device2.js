@@ -9,10 +9,10 @@ function decodeUplink(input) {
   var bytes = input.bytes;
   if (bytes.length < 14) return { errors: ["payload too short: expected 14 bytes, got " + bytes.length] };
 
-  var batteryMv = (bytes[1] << 8) | bytes[2];
-  var txCount = (bytes[3] << 24) | (bytes[4] << 16) | (bytes[5] << 8) | bytes[6];
-  var uptimeSec = (bytes[7] << 24) | (bytes[8] << 16) | (bytes[9] << 8) | bytes[10];
-  var rxCount = (bytes[11] << 8) | bytes[12];
+  var batteryMv = ((bytes[1] << 8) | bytes[2]) & 0xFFFF;
+  var txCount = ((bytes[3] << 24) | (bytes[4] << 16) | (bytes[5] << 8) | bytes[6]) >>> 0;
+  var uptimeSec = ((bytes[7] << 24) | (bytes[8] << 16) | (bytes[9] << 8) | bytes[10]) >>> 0;
+  var rxCount = ((bytes[11] << 8) | bytes[12]) & 0xFFFF;
 
   return {
     data: {

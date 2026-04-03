@@ -44,4 +44,33 @@ var enc3 = encodeDownlink({ data: { command: 0x01, value: 0xFF } });
 assert.strictEqual(enc3.bytes[0], 1);
 assert.strictEqual(enc3.bytes[1], 255);
 
+// === encodeDownlink — overflow, negativos, floats ===
+
+// --- overflow: valores > 255 devem ser truncados para byte ---
+var enc4 = encodeDownlink({ data: { command: 256, value: 300 } });
+assert.strictEqual(enc4.bytes[0], 0, "command 256 deve truncar para 0 (& 0xFF)");
+assert.strictEqual(enc4.bytes[1], 44, "value 300 deve truncar para 44 (& 0xFF)");
+
+var enc5 = encodeDownlink({ data: { command: 0x1FF, value: 0xFFFF } });
+assert.strictEqual(enc5.bytes[0], 0xFF, "command 0x1FF deve truncar para 0xFF");
+assert.strictEqual(enc5.bytes[1], 0xFF, "value 0xFFFF deve truncar para 0xFF");
+
+// --- negativos: bitwise & 0xFF produz complemento ---
+var enc6 = encodeDownlink({ data: { command: -1, value: -1 } });
+assert.strictEqual(enc6.bytes[0], 0xFF, "command -1 -> 0xFF via & 0xFF");
+assert.strictEqual(enc6.bytes[1], 0xFF, "value -1 -> 0xFF via & 0xFF");
+
+// --- floats: bitwise trunca parte fracionaria ---
+var enc7 = encodeDownlink({ data: { command: 5.9, value: 100.7 } });
+assert.strictEqual(enc7.bytes[0], 5, "command float 5.9 trunca para 5");
+assert.strictEqual(enc7.bytes[1], 100, "value float 100.7 trunca para 100");
+
+// === decodeUplink — valores limite ===
+
+// --- valores maximos (0xFF em todos os bytes) ---
+var maxResult = decodeUplink({ bytes: [0xFF, 0xFF, 0xFF, 0xFF], fPort: 1 });
+assert.strictEqual(maxResult.data.battery_mv, 65535);
+assert.strictEqual(maxResult.data.status, 255);
+assert.strictEqual(maxResult.data.gpio_state, 255);
+
 console.log("PASS rak3172-class-c-actuator");

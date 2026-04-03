@@ -85,4 +85,44 @@ var encStop = encodeDownlink({ data: { command: "stop" } });
 var decStop = decodeDownlink({ bytes: encStop.bytes, fPort: 2 });
 assert.strictEqual(decStop.data.command, "stop");
 
+// === encodeDownlink — overflow, negativos, floats ===
+
+// --- overflow: position > 255 deve truncar para byte ---
+var encOver = encodeDownlink({ data: { command: "set_position", position: 300, speed: 256 } });
+assert.strictEqual(encOver.bytes[1], 44, "position 300 -> 44 (& 0xFF)");
+assert.strictEqual(encOver.bytes[2], 0, "speed 256 -> 0 (& 0xFF)");
+
+// --- negativos ---
+var encNeg = encodeDownlink({ data: { command: "set_position", position: -1, speed: -1 } });
+assert.strictEqual(encNeg.bytes[1], 0xFF, "position -1 -> 0xFF via & 0xFF");
+assert.strictEqual(encNeg.bytes[2], 0xFF, "speed -1 -> 0xFF via & 0xFF");
+
+// --- floats: trunca parte fracionaria ---
+var encFloat = encodeDownlink({ data: { command: "set_position", position: 50.9, speed: 75.1 } });
+assert.strictEqual(encFloat.bytes[1], 50, "position float 50.9 trunca para 50");
+assert.strictEqual(encFloat.bytes[2], 75, "speed float 75.1 trunca para 75");
+
+// === decodeUplink — valores limite ===
+
+// --- supply maxima: 65535mV ---
+var maxSupply = decodeUplink({ bytes: [0x00, 0x00, 0xFF, 0xFF, 0x00], fPort: 1 });
+assert.strictEqual(maxSupply.data.supply_mv, 65535, "max uint16 supply");
+
+// === Integracao: simula roundtrip firmware -> codec -> encode -> decode ===
+
+// --- firmware envia status=running, pos=80%, supply=12000mV, flags=watchdog_ok ---
+var fwUplink = decodeUplink({ bytes: [0x01, 0x50, 0x2E, 0xE0, 0x01], fPort: 1 });
+assert.strictEqual(fwUplink.data.status_name, "running");
+assert.strictEqual(fwUplink.data.position_pct, 80);
+assert.strictEqual(fwUplink.data.supply_mv, 12000);
+assert.strictEqual(fwUplink.data.watchdog_ok, true);
+
+// --- backend envia comando em resposta, roundtrip completo ---
+var backendCmd = { data: { command: "set_position", position: 100, speed: 80 } };
+var encCmd = encodeDownlink(backendCmd);
+var decCmd = decodeDownlink({ bytes: encCmd.bytes, fPort: 2 });
+assert.strictEqual(decCmd.data.command, "set_position");
+assert.strictEqual(decCmd.data.position, 100);
+assert.strictEqual(decCmd.data.speed, 80);
+
 console.log("PASS example-actuator-bidirectional");

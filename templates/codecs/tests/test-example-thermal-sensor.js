@@ -49,4 +49,36 @@ assert(err1.errors[0].indexOf("too short") !== -1);
 var err2 = decodeUplink({ bytes: [], fPort: 1 });
 assert(err2.errors);
 
+// === Valores extremos ===
+
+// --- temperatura minima possivel: -327.68C (0x8000) ---
+var minTemp = decodeUplink({ bytes: [0x80, 0x00, 0x00, 0x00, 0x00, 0x00], fPort: 1 });
+assert.strictEqual(minTemp.data.temperature_raw, -32768, "int16 min");
+assert.strictEqual(minTemp.data.temperature_c, -327.68);
+
+// --- temperatura maxima possivel: +327.67C (0x7FFF) ---
+var maxTemp = decodeUplink({ bytes: [0x7F, 0xFF, 0x00, 0x00, 0x00, 0x00], fPort: 1 });
+assert.strictEqual(maxTemp.data.temperature_raw, 32767, "int16 max");
+assert.strictEqual(maxTemp.data.temperature_c, 327.67);
+
+// --- bateria maxima: 65535mV ---
+var maxBat = decodeUplink({ bytes: [0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00], fPort: 1 });
+assert.strictEqual(maxBat.data.battery_mv, 65535);
+
+// --- umidade maxima: 255 (pode ser invalido mas codec nao valida range) ---
+var maxHum = decodeUplink({ bytes: [0x00, 0x00, 0xFF, 0x00, 0x00, 0x00], fPort: 1 });
+assert.strictEqual(maxHum.data.humidity_pct, 255);
+
+// === Integracao: simula payload real do firmware ===
+
+// --- firmware envia: temp=25.50C, hum=70%, bat=3600mV, flags=0x04 (first_boot) ---
+// temp: 2550 = 0x09F6, bat: 3600 = 0x0E10
+var fwPayload = [0x09, 0xF6, 0x46, 0x0E, 0x10, 0x04];
+var fwResult = decodeUplink({ bytes: fwPayload, fPort: 1 });
+assert.strictEqual(fwResult.data.temperature_c, 25.50);
+assert.strictEqual(fwResult.data.humidity_pct, 70);
+assert.strictEqual(fwResult.data.battery_mv, 3600);
+assert.strictEqual(fwResult.data.first_boot, true);
+assert.strictEqual(fwResult.data.sensor_fault, false);
+
 console.log("PASS example-thermal-sensor");

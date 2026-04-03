@@ -24,7 +24,7 @@ function decodeUplink(input) {
 
 // Encode downlink (servidor -> device)
 function encodeDownlink(input) {
-  var cmd = input.data.command || 0;
-  var val = input.data.value || 0;
+  var cmd = (input.data.command || 0) & 0xFF;
+  var val = (input.data.value || 0) & 0xFF;
   return { bytes: [cmd, val] };
 }

@@ -1,8 +1,9 @@
 # TASK-2026-0014 — Hardening de codecs e testes
 
 - **Severidade:** S2
-- **Status:** pendente
+- **Status:** done
 - **Origem:** Code review 2026-04-02
+- **Concluido:** 2026-04-03
 
 ## O que
 
@@ -24,7 +25,7 @@ Codecs em produção sem bounds checking. Testes não cobrem overflow, valores n
 5. **`.gitignore` incompleto** — adicionar `.env*`, `*.key`, `*.pem`, `credentials*`, `secrets/`.
 
 ## Aceite
-- [ ] Todos os codecs com bounds checking nos inputs
-- [ ] Testes cobrem overflow, negativos e floats
-- [ ] .gitignore cobre arquivos sensíveis
-- [ ] Testes existentes continuam passando
+- [x] Todos os codecs com bounds checking nos inputs
+- [x] Testes cobrem overflow, negativos e floats
+- [x] .gitignore cobre arquivos sensíveis
+- [x] Testes existentes continuam passando
