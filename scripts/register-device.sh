@@ -188,11 +188,12 @@ fi
 
 log "Buscando device profile '${PROFILE_NAME}'..."
 EXISTING_PROFILE=$(api_get "/device-profiles?limit=100&tenantId=${TENANT_ID}" | \
-  python3 -c "
-import sys,json
+  MATCH_NAME="$PROFILE_NAME" python3 -c "
+import sys,json,os
 data = json.load(sys.stdin)
+name = os.environ['MATCH_NAME']
 for p in data.get('result',[]):
-    if p.get('name') == '${PROFILE_NAME}':
+    if p.get('name') == name:
         print(p['id'])
         break
 " 2>/dev/null || true)
@@ -211,20 +212,23 @@ else
     CODEC_SCRIPT=$(python3 -c "import json,sys; print(json.dumps(open(sys.argv[1]).read()))" "$CODEC_FILE")
   fi
 
-  PROFILE_JSON=$(python3 -c "
-import json
+  SUPPORTS_CLASS_C=$([[ "$DEVICE_TYPE" == "actuator" ]] && echo "true" || echo "false")
+  PROFILE_JSON=$(P_NAME="$PROFILE_NAME" P_TENANT="$TENANT_ID" P_MAC="$MAC_VERSION" \
+    P_REG="$REG_PARAMS" P_CLASS_C="$SUPPORTS_CLASS_C" P_CODEC_RT="$CODEC_RUNTIME" \
+    P_CODEC_SCRIPT="${CODEC_SCRIPT:-\"\"}" python3 -c "
+import json,os
 profile = {
     'deviceProfile': {
-        'name': '${PROFILE_NAME}',
+        'name': os.environ['P_NAME'],
         'description': 'Auto-gerado por register-device.sh',
-        'tenantId': '${TENANT_ID}',
+        'tenantId': os.environ['P_TENANT'],
         'region': 'US915',
-        'macVersion': '${MAC_VERSION}',
-        'regParamsRevision': '${REG_PARAMS}',
+        'macVersion': os.environ['P_MAC'],
+        'regParamsRevision': os.environ['P_REG'],
         'supportsOtaa': True,
-        'supportsClassC': $([ "$DEVICE_TYPE" == "actuator" ] && echo "True" || echo "False"),
-        'payloadCodecRuntime': '${CODEC_RUNTIME}',
-        'payloadCodecScript': ${CODEC_SCRIPT:-'\"\"'},
+        'supportsClassC': os.environ['P_CLASS_C'] == 'true',
+        'payloadCodecRuntime': os.environ['P_CODEC_RT'],
+        'payloadCodecScript': json.loads(os.environ['P_CODEC_SCRIPT']),
         'uplinkInterval': 3600,
         'flushQueueOnActivate': True
     }
@@ -241,11 +245,12 @@ fi
 # ── 5. Application ───────────────────────────────────────────────────────────
 log "Buscando application '${APP_NAME}'..."
 EXISTING_APP=$(api_get "/applications?limit=100&tenantId=${TENANT_ID}" | \
-  python3 -c "
-import sys,json
+  MATCH_NAME="$APP_NAME" python3 -c "
+import sys,json,os
 data = json.load(sys.stdin)
+name = os.environ['MATCH_NAME']
 for a in data.get('result',[]):
-    if a.get('name') == '${APP_NAME}':
+    if a.get('name') == name:
         print(a['id'])
         break
 " 2>/dev/null || true)
@@ -255,13 +260,13 @@ if [[ -n "$EXISTING_APP" ]]; then
   log "Application existente: ${APP_ID}"
 else
   log "Criando application '${APP_NAME}'..."
-  APP_JSON=$(python3 -c "
-import json
+  APP_JSON=$(A_NAME="$APP_NAME" A_TENANT="$TENANT_ID" python3 -c "
+import json,os
 app = {
     'application': {
-        'name': '${APP_NAME}',
+        'name': os.environ['A_NAME'],
         'description': 'Auto-gerado por register-device.sh',
-        'tenantId': '${TENANT_ID}'
+        'tenantId': os.environ['A_TENANT']
     }
 }
 print(json.dumps(app))
@@ -274,14 +279,14 @@ fi
 
 # ── 6. Registrar device ──────────────────────────────────────────────────────
 log "Registrando device '${DEVICE_NAME}' (${DEV_EUI})..."
-DEVICE_JSON=$(python3 -c "
-import json
+DEVICE_JSON=$(D_EUI="$DEV_EUI" D_NAME="$DEVICE_NAME" D_APP="$APP_ID" D_PROFILE="$PROFILE_ID" python3 -c "
+import json,os
 device = {
     'device': {
-        'devEui': '${DEV_EUI}',
-        'name': '${DEVICE_NAME}',
-        'applicationId': '${APP_ID}',
-        'deviceProfileId': '${PROFILE_ID}',
+        'devEui': os.environ['D_EUI'],
+        'name': os.environ['D_NAME'],
+        'applicationId': os.environ['D_APP'],
+        'deviceProfileId': os.environ['D_PROFILE'],
         'isDisabled': False,
         'skipFcntCheck': False
     }
@@ -293,13 +298,13 @@ log "Device registrado"
 
 # ── 7. Configurar chaves OTAA ────────────────────────────────────────────────
 log "Configurando chaves OTAA (nwkKey = appKey)..."
-KEYS_JSON=$(python3 -c "
-import json
+KEYS_JSON=$(K_EUI="$DEV_EUI" K_KEY="$APP_KEY" python3 -c "
+import json,os
 keys = {
     'deviceKeys': {
-        'devEui': '${DEV_EUI}',
-        'nwkKey': '${APP_KEY}',
-        'appKey': '${APP_KEY}'
+        'devEui': os.environ['K_EUI'],
+        'nwkKey': os.environ['K_KEY'],
+        'appKey': os.environ['K_KEY']
     }
 }
 print(json.dumps(keys))
@@ -322,22 +327,27 @@ APP_KEY_BYTES=$(hex_to_bytes "$APP_KEY")
 APP_EUI_BYTES="0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00"
 
 if $JSON_OUTPUT; then
-  python3 -c "
-import json
+  J_DEV_EUI="$DEV_EUI" J_APP_KEY="$APP_KEY" J_JOIN_EUI="$JOIN_EUI" \
+  J_DEV_NAME="$DEVICE_NAME" J_DEV_TYPE="$DEVICE_TYPE" J_APP_ID="$APP_ID" \
+  J_APP_NAME="$APP_NAME" J_PROFILE_ID="$PROFILE_ID" J_DEV_CLASS="$DEVICE_CLASS" \
+  J_EUI_BYTES="$DEV_EUI_BYTES" J_KEY_BYTES="$APP_KEY_BYTES" \
+  J_AE_BYTES="$APP_EUI_BYTES" J_HOST="$HOST" python3 -c "
+import json,os
+e = os.environ
 result = {
-    'devEui': '${DEV_EUI}',
-    'appKey': '${APP_KEY}',
-    'joinEui': '${JOIN_EUI}',
-    'deviceName': '${DEVICE_NAME}',
-    'deviceType': '${DEVICE_TYPE}',
-    'applicationId': '${APP_ID}',
-    'applicationName': '${APP_NAME}',
-    'deviceProfileId': '${PROFILE_ID}',
-    'deviceClass': '${DEVICE_CLASS}',
-    'devEuiBytes': '${DEV_EUI_BYTES}',
-    'appKeyBytes': '${APP_KEY_BYTES}',
-    'appEuiBytes': '${APP_EUI_BYTES}',
-    'host': '${HOST}'
+    'devEui': e['J_DEV_EUI'],
+    'appKey': e['J_APP_KEY'],
+    'joinEui': e['J_JOIN_EUI'],
+    'deviceName': e['J_DEV_NAME'],
+    'deviceType': e['J_DEV_TYPE'],
+    'applicationId': e['J_APP_ID'],
+    'applicationName': e['J_APP_NAME'],
+    'deviceProfileId': e['J_PROFILE_ID'],
+    'deviceClass': e['J_DEV_CLASS'],
+    'devEuiBytes': e['J_EUI_BYTES'],
+    'appKeyBytes': e['J_KEY_BYTES'],
+    'appEuiBytes': e['J_AE_BYTES'],
+    'host': e['J_HOST']
 }
 print(json.dumps(result, indent=2))
 "

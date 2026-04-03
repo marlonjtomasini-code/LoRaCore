@@ -39,6 +39,10 @@ platformio_local.ini
 credentials*
 secrets/
 
+# Claude Code (local config)
+.claude/settings.json
+.claude/settings.local.json
+
 # OS
 .DS_Store
 Thumbs.db
