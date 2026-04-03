@@ -17,6 +17,7 @@ Cada runbook e acionado por um **trigger** — o sinal que indica que o incident
 | [RUNBOOK-005](RUNBOOK-005-device-offline.md) | ALERT OFFLINE no log, device sem report | 10-15 min |
 | [RUNBOOK-006](RUNBOOK-006-alerting-failure.md) | Alertas nao chegam, spool acumulando | 5-10 min |
 | [RUNBOOK-007](RUNBOOK-007-tunnel-down.md) | Tunnel SSH reverso inativo | 5-15 min |
+| [RUNBOOK-008](RUNBOOK-008-new-device-registration.md) | Cadastro de novo dispositivo | 15-30 min |
 
 ## Estrutura de cada runbook
 
